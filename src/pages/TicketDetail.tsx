@@ -131,7 +131,9 @@ const TicketDetail: React.FC = () => {
 
                             <div>
                                 <div className="text-xs font-black text-slate-400 uppercase tracking-wider mb-1">Feature</div>
-                                <div className="font-semibold text-slate-800">{ticket.feature?.name || ticket.feature_other || '-'}</div>
+                                <div className="font-semibold text-slate-800">
+                                    {(ticket.feature?.name === 'Lainnya' ? ticket.feature_other : ticket.feature?.name) || ticket.feature_other || '-'}
+                                </div>
                             </div>
                             <div>
                                 <div className="text-xs font-black text-slate-400 uppercase tracking-wider mb-1">Inputter Name</div>

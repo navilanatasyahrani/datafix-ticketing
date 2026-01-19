@@ -192,7 +192,7 @@ const TicketList: React.FC = () => {
                                                 {format(new Date(ticket.created_at), 'dd MMM yyyy')}
                                             </td>
                                             <td className="px-6 py-4 text-sm text-[#111418]">
-                                                {ticket.feature?.name || ticket.feature_other || ticket.issue_type}
+                                                {(ticket.feature?.name === 'Lainnya' ? ticket.feature_other : ticket.feature?.name) || ticket.feature_other || ticket.issue_type}
                                             </td>
                                             <td className="px-6 py-4">
                                                 {getPriorityBadge(ticket.priority)}

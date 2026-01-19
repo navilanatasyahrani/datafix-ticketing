@@ -35,10 +35,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                     {/* Logo Section */}
                     <div className="flex items-center gap-3 text-primary">
                         <div className="size-8 bg-primary/10 rounded-lg flex items-center justify-center">
-                            <span className="material-symbols-outlined text-primary">analytics</span>
+                            <span className="material-symbols-outlined text-primary">confirmation_number</span>
                         </div>
                         <h2 className="text-slate-900 text-lg font-bold leading-tight tracking-tight">
-                            DataFix
+                            Ticket
                         </h2>
                     </div>
 
