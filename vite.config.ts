@@ -7,6 +7,6 @@ export default defineConfig({
     server: {
         port: 5173,
         strictPort: false, // Set true jika ingin error ketika port 5173 tidak tersedia
-        open: true, // Otomatis buka browser saat server start
+        open: false, // Otomatis buka browser saat server start
     }
 })
