@@ -121,6 +121,12 @@ export const updateTicket = async (id: string, updates: Partial<Ticket>) => {
 
 export const deleteTicket = async (id: string) => {
     try {
+        // Delete related records first (manual cascade)
+        await supabase.from('ticket_detail_lines').delete().eq('ticket_id', id);
+        await supabase.from('ticket_status_history').delete().eq('ticket_id', id);
+        await supabase.from('ticket_attachments').delete().eq('ticket_id', id);
+
+        // Finally delete the ticket
         const { error } = await supabase
             .from('datafix_tickets')
             .delete()
@@ -128,13 +134,13 @@ export const deleteTicket = async (id: string) => {
 
         return { error };
     } catch (error) {
-        return { error };
+        return { error: error as any };
     }
 };
 
 export const getTicketStats = async () => {
     try {
-        const { data, error } = await supabase.rpc('get_ticket_stats').single();
+        const { data, error } = await supabase.rpc('get_ticket_stats');
         return { data, error };
     } catch (error) {
         return { data: null, error };

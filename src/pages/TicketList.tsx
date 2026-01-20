@@ -1,19 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
-import { getTickets, getTicketStats } from "../services/ticketService";
+import { getTickets, getTicketStats, deleteTicket } from "../services/ticketService";
+import { useAuth } from "../contexts/AuthContext";
 import { Ticket, TicketStatus } from "../types";
 import { format } from "date-fns";
 
 interface Stats {
   total_tickets: number;
-  pending_tickets: number;
+  open_tickets: number;
   in_progress_tickets: number;
   resolved_tickets: number;
   rejected_tickets: number;
 }
 
 const TicketList: React.FC = () => {
+  const { isAdmin } = useAuth();
   const navigate = useNavigate();
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [filteredTickets, setFilteredTickets] = useState<Ticket[]>([]);
@@ -41,9 +43,34 @@ const TicketList: React.FC = () => {
       setTickets(ticketsData);
       setFilteredTickets(ticketsData);
     }
-    if (statsData) setStats(statsData as Stats);
+
+    if (statsData) {
+      // Map backend pending_tickets to open_tickets
+      const mappedStats = {
+        ...statsData,
+        open_tickets: (statsData as any).open_tickets || 0,
+        total_tickets: (statsData as any).total_tickets || 0,
+        in_progress_tickets: (statsData as any).in_progress_tickets || 0,
+        resolved_tickets: (statsData as any).resolved_tickets || (statsData as any).done || 0,
+        rejected_tickets: (statsData as any).rejected_tickets || 0,
+      };
+      setStats(mappedStats as Stats);
+    } else {
+      console.error("Failed to load ticket stats. Check API permissions or response format.");
+    }
 
     setLoading(false);
+  };
+
+  const handleDelete = async (id: string) => {
+    if (confirm("Apakah Anda yakin ingin menghapus tiket ini? Tindakan ini tidak dapat dibatalkan.")) {
+      const { error } = await deleteTicket(id);
+      if (error) {
+        alert("Gagal menghapus tiket");
+      } else {
+        loadData();
+      }
+    }
   };
 
   const applyFilters = () => {
@@ -102,6 +129,50 @@ const TicketList: React.FC = () => {
             </div>
           </div>
 
+          {/* Statistics Summary */}
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mt-2">
+            <div className="p-4 bg-white rounded-xl shadow-sm border border-[#e5e7eb]">
+              <p className="text-xs font-bold text-[#60758a] uppercase tracking-wider mb-1">
+                Total Tiket
+              </p>
+              <p className="text-2xl font-black text-[#111418]">
+                {stats?.total_tickets || 0}
+              </p>
+            </div>
+            <div className="p-4 bg-white rounded-xl shadow-sm border border-[#e5e7eb]">
+              <p className="text-xs font-bold text-[#60758a] uppercase tracking-wider mb-1">
+                Dalam Antrean
+              </p>
+              <p className="text-2xl font-black text-[#111418]">
+                {stats?.open_tickets || 0}
+              </p>
+            </div>
+            <div className="p-4 bg-white rounded-xl shadow-sm border border-[#e5e7eb]">
+              <p className="text-xs font-bold text-[#60758a] uppercase tracking-wider mb-1">
+                Diproses
+              </p>
+              <p className="text-2xl font-black text-primary">
+                {stats?.in_progress_tickets || 0}
+              </p>
+            </div>
+            <div className="p-4 bg-white rounded-xl shadow-sm border border-[#e5e7eb]">
+              <p className="text-xs font-bold text-[#60758a] uppercase tracking-wider mb-1">
+                Selesai
+              </p>
+              <p className="text-2xl font-black text-green-600">
+                {stats?.resolved_tickets || 0}
+              </p>
+            </div>
+            <div className="p-4 bg-white rounded-xl shadow-sm border border-[#e5e7eb]">
+              <p className="text-xs font-bold text-[#60758a] uppercase tracking-wider mb-1">
+                Ditolak
+              </p>
+              <p className="text-2xl font-black text-rose-600">
+                {stats?.rejected_tickets || 0}
+              </p>
+            </div>
+          </div>
+
           {/* Search and Filters Section */}
           <div className="bg-white rounded-xl shadow-sm border border-[#e5e7eb] p-4">
             <div className="flex flex-col md:flex-row gap-4">
@@ -135,7 +206,7 @@ const TicketList: React.FC = () => {
                     <option value="">Semua Status</option>
                     <option value="open">Dalam Antrean</option>
                     <option value="in_progress">Sedang Diproses</option>
-                    <option value="resolved">Selesai</option>
+                    <option value="done">Selesai</option>
                     <option value="rejected">Ditolak</option>
                   </select>
                   <span className="material-symbols-outlined text-[20px] absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
@@ -182,7 +253,7 @@ const TicketList: React.FC = () => {
                     <th className="px-6 py-4 text-xs font-bold text-[#60758a] uppercase tracking-wider">
                       Status
                     </th>
-                    <th className="px-6 py-4 text-xs font-bold text-[#60758a] uppercase tracking-wider text-right">
+                    <th className="px-6 py-4 text-xs font-bold text-[#60758a] uppercase tracking-wider text-center">
                       Aksi
                     </th>
                   </tr>
@@ -213,12 +284,25 @@ const TicketList: React.FC = () => {
                         {getStatusBadge(ticket.status)}
                       </td>
                       <td className="px-6 py-4 text-right">
-                        <button
-                          onClick={() => navigate(`/tickets/${ticket.id}`)}
-                          className="text-primary hover:underline text-sm font-semibold"
-                        >
-                          Detail
-                        </button>
+                        <div className="flex items-center justify-end gap-3">
+                          <button
+                            onClick={() => navigate(`/tickets/${ticket.id}`)}
+                            className="text-blue-600 hover:text-blue-800 text-sm font-bold transition-colors"
+                          >
+                            Detail
+                          </button>
+                          {isAdmin && (
+                            <button
+                              onClick={() => handleDelete(ticket.id)}
+                              className="flex items-center gap-1 text-red-500 hover:text-red-700 text-sm font-bold transition-colors"
+                            >
+                              <span className="material-symbols-outlined text-[18px]">
+                                delete
+                              </span>
+                              Hapus
+                            </button>
+                          )}
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -277,43 +361,10 @@ const TicketList: React.FC = () => {
           </div>
 
           {/* Statistics Summary */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-2">
-            <div className="p-4 bg-white rounded-xl shadow-sm border border-[#e5e7eb]">
-              <p className="text-xs font-bold text-[#60758a] uppercase tracking-wider mb-1">
-                Total Tiket
-              </p>
-              <p className="text-2xl font-black text-[#111418]">
-                {stats?.total_tickets || 0}
-              </p>
-            </div>
-            <div className="p-4 bg-white rounded-xl shadow-sm border border-[#e5e7eb]">
-              <p className="text-xs font-bold text-[#60758a] uppercase tracking-wider mb-1">
-                Menunggu
-              </p>
-              <p className="text-2xl font-black text-[#111418]">
-                {stats?.pending_tickets || 0}
-              </p>
-            </div>
-            <div className="p-4 bg-white rounded-xl shadow-sm border border-[#e5e7eb]">
-              <p className="text-xs font-bold text-[#60758a] uppercase tracking-wider mb-1">
-                Diproses
-              </p>
-              <p className="text-2xl font-black text-primary">
-                {stats?.in_progress_tickets || 0}
-              </p>
-            </div>
-            <div className="p-4 bg-white rounded-xl shadow-sm border border-[#e5e7eb]">
-              <p className="text-xs font-bold text-[#60758a] uppercase tracking-wider mb-1">
-                Selesai
-              </p>
-              <p className="text-2xl font-black text-green-600">
-                {stats?.resolved_tickets || 0}
-              </p>
-            </div>
-          </div>
+
         </div>
-      </main>
-    </Layout>
+      </main >
+    </Layout >
   );
 };
 
@@ -358,7 +409,7 @@ function getStatusBadge(status: TicketStatus) {
       bg: "bg-orange-100",
       text: "text-orange-600",
       dot: "bg-orange-400",
-      label: "Menunggu",
+      label: "Dalam Antrean",
     },
     [TicketStatus.OPEN]: {
       bg: "bg-[#f0f2f5]",

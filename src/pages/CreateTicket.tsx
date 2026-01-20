@@ -311,12 +311,12 @@ const CreateTicket: React.FC = () => {
 
                                 {/* Inputter Name */}
                                 <div>
-                                    <label className="form-label">User yang login (ketika salah input)</label>
+                                    <label className="form-label">PIC</label>
                                     <input
                                         type="text"
                                         name="inputter_name"
                                         className="w-full rounded-lg border border-slate-200 h-11 px-4 focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all text-sm"
-                                        placeholder="Nama petugas yang salah input"
+                                        placeholder="Orang yang bertanggung jawab"
                                         value={formData.inputter_name}
                                         onChange={handleChange}
                                     />

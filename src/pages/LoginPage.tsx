@@ -32,10 +32,10 @@ const LoginPage: React.FC = () => {
                 <div className="text-center mb-10">
                     <div className="inline-flex items-center justify-center w-16 h-16 rounded-3xl bg-blue-600 shadow-xl shadow-blue-200 mb-4">
                         <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 4h14a2 2 0 012 2v4a2 2 0 100 4v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4a2 2 0 100-4V6a2 2 0 012-2z M12 8v0m0 4v0m0 4v0" />
                         </svg>
                     </div>
-                    <h1 className="text-3xl font-black text-slate-900 tracking-tight">DataFix</h1>
+                    <h1 className="text-3xl font-black text-slate-900 tracking-tight">Ticket</h1>
                     <p className="text-slate-500 mt-2 font-medium">Ticketing Perbaikan Data Internal</p>
                     {error && (
                         <div className="mt-4 inline-block bg-red-50 px-4 py-2 rounded-full border border-red-100">

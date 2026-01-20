@@ -255,10 +255,10 @@ const TicketDetail: React.FC = () => {
                                         value={editData.status}
                                         onChange={(e) => setEditData({ ...editData, status: e.target.value })}
                                     >
-                                        <option value="open">Open</option>
-                                        <option value="in_progress">In Progress</option>
-                                        <option value="resolved">Resolved</option>
-                                        <option value="rejected">Rejected</option>
+                                        <option value="open">Dalam Antrean</option>
+                                        <option value="in_progress">Sedang Diproses</option>
+                                        <option value="done">Selesai</option>
+                                        <option value="rejected">Ditolak</option>
                                     </select>
                                 </div>
 
@@ -285,7 +285,7 @@ const TicketDetail: React.FC = () => {
                                     <div className="text-xs font-black text-slate-400 uppercase tracking-wider mb-2">Status</div>
                                     <span className={`inline-block px-3 py-1 rounded-full text-xs font-bold ${ticket.status === 'open' ? 'bg-orange-100 text-orange-700' :
                                         ticket.status === 'in_progress' ? 'bg-blue-100 text-blue-700' :
-                                            ticket.status === 'resolved' ? 'bg-green-100 text-green-700' :
+                                            ticket.status === 'done' ? 'bg-green-100 text-green-700' :
                                                 'bg-red-100 text-red-700'
                                         }`}>
                                         {getStatusLabel(ticket.status)}

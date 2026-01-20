@@ -8,7 +8,7 @@ import { format } from "date-fns";
 
 interface Stats {
   total_tickets: number;
-  pending_tickets: number;
+  open_tickets: number;
   in_progress_tickets: number;
   resolved_tickets: number;
   rejected_tickets: number;
@@ -30,7 +30,16 @@ const Dashboard: React.FC = () => {
 
     const { data: statsData } = await getTicketStats();
     if (statsData) {
-      setStats(statsData as Stats);
+      // Map backend pending_tickets to open_tickets
+      const mappedStats = {
+        ...statsData,
+        open_tickets: (statsData as any).open_tickets || 0,
+        total_tickets: (statsData as any).total_tickets || 0,
+        in_progress_tickets: (statsData as any).in_progress_tickets || 0,
+        resolved_tickets: (statsData as any).resolved_tickets || (statsData as any).done || 0,
+        rejected_tickets: (statsData as any).rejected_tickets || 0,
+      };
+      setStats(mappedStats as Stats);
     }
 
     const { data: ticketsData } = await getTickets();
@@ -52,7 +61,7 @@ const Dashboard: React.FC = () => {
   }
 
   const activeRequests =
-    (stats?.pending_tickets || 0) + (stats?.in_progress_tickets || 0);
+    (stats?.open_tickets || 0) + (stats?.in_progress_tickets || 0);
   const successRate = stats?.total_tickets
     ? ((stats.resolved_tickets / stats.total_tickets) * 100).toFixed(1)
     : "0.0";
@@ -186,7 +195,7 @@ const Dashboard: React.FC = () => {
                   <th className="px-6 py-4 text-slate-900 text-xs font-bold uppercase tracking-wider">
                     Requester
                   </th>
-                  <th className="px-6 py-4 text-primary text-xs font-bold uppercase tracking-wider w-[120px] text-right">
+                  <th className="px-6 py-4 text-slate-900 text-xs font-bold uppercase tracking-wider w-[120px] text-right">
                     Actions
                   </th>
                 </tr>
@@ -241,6 +250,7 @@ const Dashboard: React.FC = () => {
                       >
                         Details
                       </button>
+
                     </td>
                   </tr>
                 ))}
@@ -292,7 +302,7 @@ const Dashboard: React.FC = () => {
 
         <div className="h-20"></div>
       </main>
-    </Layout>
+    </Layout >
   );
 };
 

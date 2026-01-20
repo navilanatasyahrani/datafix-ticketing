@@ -19,12 +19,13 @@ export const formatRelativeTime = (date: string | Date): string => {
 
 export const getStatusLabel = (status: string): string => {
   switch (status) {
+    case TicketStatus.OPEN:
     case TicketStatus.PENDING:
-      return "Pending";
+      return "Dalam Antrean";
     case TicketStatus.IN_PROGRESS:
       return "In Progress";
     case TicketStatus.RESOLVED:
-      return "Resolved";
+      return "Selesai";
     case TicketStatus.REJECTED:
       return "Rejected";
     default:
@@ -34,8 +35,9 @@ export const getStatusLabel = (status: string): string => {
 
 export const getStatusColor = (status: string): string => {
   switch (status) {
+    case TicketStatus.OPEN:
     case TicketStatus.PENDING:
-      return "orange";
+      return "gray";
     case TicketStatus.IN_PROGRESS:
       return "blue";
     case TicketStatus.RESOLVED:

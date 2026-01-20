@@ -29,9 +29,9 @@ export interface Ticket {
 export enum TicketStatus {
   OPEN = "open",
   IN_PROGRESS = "in_progress",
-  RESOLVED = "resolved",
+  RESOLVED = "done",
   REJECTED = "rejected",
-  PENDING = "PENDING",
+  PENDING = "pending", // Deprecated, mapped to OPEN in UI
 }
 
 export interface Branch {
