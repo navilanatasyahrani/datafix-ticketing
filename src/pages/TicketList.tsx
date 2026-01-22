@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
-import { getTickets, getTicketStats, deleteTicket } from "../services/ticketService";
+import { getTickets, getTicketStats, deleteTicket, updateTicket } from "../services/ticketService";
+import { ASSIGNEES } from "../constants/assignees";
 import { useAuth } from "../contexts/AuthContext";
 import { Ticket, TicketStatus } from "../types";
 import { format } from "date-fns";
@@ -24,6 +25,14 @@ const TicketList: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [priorityFilter, setPriorityFilter] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
+  // Calculate pagination
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredTickets.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredTickets.length / itemsPerPage);
 
   useEffect(() => {
     loadData();
@@ -48,7 +57,7 @@ const TicketList: React.FC = () => {
       // Map backend pending_tickets to open_tickets
       const mappedStats = {
         ...statsData,
-        open_tickets: (statsData as any).open_tickets || 0,
+        open_tickets: (statsData as any).pending_tickets || (statsData as any).open_tickets || 0,
         total_tickets: (statsData as any).total_tickets || 0,
         in_progress_tickets: (statsData as any).in_progress_tickets || 0,
         resolved_tickets: (statsData as any).resolved_tickets || (statsData as any).done || 0,
@@ -70,6 +79,28 @@ const TicketList: React.FC = () => {
       } else {
         loadData();
       }
+    }
+  };
+
+  const handleAssigneeChange = async (ticketId: string, newAssignee: string) => {
+    // Optimistic update
+    const updatedTickets = tickets.map(t =>
+      t.id === ticketId
+        ? { ...t, assigned_to: newAssignee }
+        : t
+    );
+    setTickets(updatedTickets);
+    setFilteredTickets(prev => prev.map(t =>
+      t.id === ticketId
+        ? { ...t, assigned_to: newAssignee }
+        : t
+    ));
+
+    const { error } = await updateTicket(ticketId, { assigned_to: newAssignee || undefined });
+
+    if (error) {
+      alert("Gagal mengupdate PIC");
+      loadData(); // Revert on failure
     }
   };
 
@@ -101,6 +132,7 @@ const TicketList: React.FC = () => {
     }
 
     setFilteredTickets(filtered);
+    setCurrentPage(1); // Reset to first page when filtering
   };
 
   if (loading) {
@@ -220,6 +252,7 @@ const TicketList: React.FC = () => {
                     value={priorityFilter}
                     onChange={(e) => setPriorityFilter(e.target.value)}
                   >
+                    <option value="">Semua Prioritas</option>
                     <option value="1">Tinggi</option>
                     <option value="2">Sedang</option>
                     <option value="3">Rendah</option>
@@ -251,6 +284,9 @@ const TicketList: React.FC = () => {
                       Prioritas
                     </th>
                     <th className="px-6 py-4 text-xs font-bold text-[#60758a] uppercase tracking-wider">
+                      Assigned To
+                    </th>
+                    <th className="px-6 py-4 text-xs font-bold text-[#60758a] uppercase tracking-wider">
                       Status
                     </th>
                     <th className="px-6 py-4 text-xs font-bold text-[#60758a] uppercase tracking-wider text-center">
@@ -259,7 +295,7 @@ const TicketList: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#e5e7eb]">
-                  {filteredTickets.slice(0, 10).map((ticket) => (
+                  {currentItems.map((ticket) => (
                     <tr
                       key={ticket.id}
                       className="hover:bg-[#f8fafc] transition-colors"
@@ -279,6 +315,57 @@ const TicketList: React.FC = () => {
                       </td>
                       <td className="px-6 py-4">
                         {getPriorityBadge(ticket.priority)}
+                      </td>
+                      <td className="px-6 py-4">
+                        {isAdmin ? (
+                          <div className="relative group min-w-[170px]">
+                            <select
+                              value={ticket.assigned_to || ""}
+                              onChange={(e) => handleAssigneeChange(ticket.id, e.target.value)}
+                              className="appearance-none w-full bg-white border border-slate-200 text-[#111418] text-sm rounded-lg pl-9 pr-8 py-2 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all cursor-pointer hover:border-slate-300"
+                            >
+                              <option value="">Unassigned</option>
+                              {ASSIGNEES.map((name) => (
+                                <option key={name} value={name}>
+                                  {name}
+                                </option>
+                              ))}
+                            </select>
+
+                            {/* Avatar Icon Overlay */}
+                            <div className="absolute left-2 top-1/2 -translate-y-1/2 pointer-events-none">
+                              <div className={`size-5 rounded-full flex items-center justify-center overflow-hidden ${ticket.assigned_to
+                                  ? 'bg-blue-100 text-blue-700'
+                                  : 'bg-slate-100 text-slate-400'
+                                }`}>
+                                <span className="text-[10px] font-bold">
+                                  {(ticket.assigned_to || '?')[0].toUpperCase()}
+                                </span>
+                              </div>
+                            </div>
+
+                            {/* Chevron Icon Overlay */}
+                            <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+                              <span className="material-symbols-outlined text-[18px]">
+                                unfold_more
+                              </span>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="flex items-center gap-2">
+                            <div className={`size-6 rounded-full flex items-center justify-center overflow-hidden ${ticket.assigned_to
+                              ? 'bg-blue-100 text-blue-700'
+                              : 'bg-slate-100 text-slate-400'
+                              }`}>
+                              <span className="text-xs font-bold">
+                                {(ticket.assigned_to || '?')[0].toUpperCase()}
+                              </span>
+                            </div>
+                            <span className={`text-sm ${ticket.assigned_to ? 'text-[#111418] font-medium' : 'text-slate-400 italic'}`}>
+                              {ticket.assigned_to || 'Unassigned'}
+                            </span>
+                          </div>
+                        )}
                       </td>
                       <td className="px-6 py-4">
                         {getStatusBadge(ticket.status)}
@@ -309,7 +396,7 @@ const TicketList: React.FC = () => {
                   {filteredTickets.length === 0 && (
                     <tr>
                       <td
-                        colSpan={6}
+                        colSpan={7}
                         className="px-6 py-12 text-center text-[#60758a]"
                       >
                         Tidak ada tiket yang ditemukan
@@ -325,9 +412,12 @@ const TicketList: React.FC = () => {
               <div className="flex items-center justify-between px-6 py-4 border-t border-[#e5e7eb] bg-[#f8fafc]">
                 <p className="text-sm text-[#60758a]">
                   Menampilkan{" "}
-                  <span className="font-medium text-[#111418]">1</span> sampai{" "}
                   <span className="font-medium text-[#111418]">
-                    {Math.min(10, filteredTickets.length)}
+                    {Math.min((currentPage - 1) * itemsPerPage + 1, filteredTickets.length)}
+                  </span>{" "}
+                  sampai{" "}
+                  <span className="font-medium text-[#111418]">
+                    {Math.min(currentPage * itemsPerPage, filteredTickets.length)}
                   </span>{" "}
                   dari{" "}
                   <span className="font-medium text-[#111418]">
@@ -336,21 +426,47 @@ const TicketList: React.FC = () => {
                   hasil
                 </p>
                 <div className="flex gap-2">
-                  <button className="flex items-center justify-center size-9 rounded-lg border border-[#e5e7eb] bg-white text-gray-400 cursor-not-allowed">
+                  <button
+                    onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                    disabled={currentPage === 1}
+                    className="flex items-center justify-center size-9 rounded-lg border border-[#e5e7eb] bg-white text-[#111418] hover:bg-gray-50 disabled:text-gray-400 disabled:cursor-not-allowed"
+                  >
                     <span className="material-symbols-outlined text-[18px]">
                       chevron_left
                     </span>
                   </button>
-                  <button className="flex items-center justify-center size-9 rounded-lg border border-primary bg-primary text-white font-bold text-sm">
-                    1
-                  </button>
-                  <button className="flex items-center justify-center size-9 rounded-lg border border-[#e5e7eb] bg-white text-[#111418] hover:bg-gray-50 text-sm">
-                    2
-                  </button>
-                  <button className="flex items-center justify-center size-9 rounded-lg border border-[#e5e7eb] bg-white text-[#111418] hover:bg-gray-50 text-sm">
-                    3
-                  </button>
-                  <button className="flex items-center justify-center size-9 rounded-lg border border-[#e5e7eb] bg-white text-[#111418] hover:bg-gray-50">
+
+                  {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                    let pageNum;
+                    if (totalPages <= 5) {
+                      pageNum = i + 1;
+                    } else if (currentPage <= 3) {
+                      pageNum = i + 1;
+                    } else if (currentPage >= totalPages - 2) {
+                      pageNum = totalPages - 4 + i;
+                    } else {
+                      pageNum = currentPage - 2 + i;
+                    }
+
+                    return (
+                      <button
+                        key={pageNum}
+                        onClick={() => setCurrentPage(pageNum)}
+                        className={`flex items-center justify-center size-9 rounded-lg border text-sm font-bold ${currentPage === pageNum
+                            ? "border-primary bg-primary text-white"
+                            : "border-[#e5e7eb] bg-white text-[#111418] hover:bg-gray-50"
+                          }`}
+                      >
+                        {pageNum}
+                      </button>
+                    );
+                  })}
+
+                  <button
+                    onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                    disabled={currentPage === totalPages}
+                    className="flex items-center justify-center size-9 rounded-lg border border-[#e5e7eb] bg-white text-[#111418] hover:bg-gray-50 disabled:text-gray-400 disabled:cursor-not-allowed"
+                  >
                     <span className="material-symbols-outlined text-[18px]">
                       chevron_right
                     </span>
@@ -359,12 +475,9 @@ const TicketList: React.FC = () => {
               </div>
             )}
           </div>
-
-          {/* Statistics Summary */}
-
         </div>
-      </main >
-    </Layout >
+      </main>
+    </Layout>
   );
 };
 

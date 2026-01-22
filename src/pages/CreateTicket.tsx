@@ -6,10 +6,7 @@ import { getBranches, getAllFeatures } from '../services/masterDataService';
 import { useAuth } from '../contexts/AuthContext';
 import { Branch, Feature } from '../types';
 
-interface DetailLineItem {
-    item_name: string;
-    value: string;
-}
+// Removed DetailLineItem interface - now using simple text descriptions
 
 const CreateTicket: React.FC = () => {
     const { user } = useAuth();
@@ -35,13 +32,8 @@ const CreateTicket: React.FC = () => {
         priority: 2,
     });
 
-    const [wrongDataLines, setWrongDataLines] = useState<DetailLineItem[]>([
-        { item_name: '', value: '' }
-    ]);
-
-    const [correctDataLines, setCorrectDataLines] = useState<DetailLineItem[]>([
-        { item_name: '', value: '' }
-    ]);
+    const [wrongDescription, setWrongDescription] = useState('');
+    const [correctDescription, setCorrectDescription] = useState('');
 
     useEffect(() => {
         loadMasterData();
@@ -60,22 +52,7 @@ const CreateTicket: React.FC = () => {
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
-    const handleWrongDataChange = (index: number, field: keyof DetailLineItem, value: string) => {
-        const newLines = [...wrongDataLines];
-        newLines[index][field] = value;
-        setWrongDataLines(newLines);
-    };
-
-    const handleCorrectDataChange = (index: number, field: keyof DetailLineItem, value: string) => {
-        const newLines = [...correctDataLines];
-        newLines[index][field] = value;
-        setCorrectDataLines(newLines);
-    };
-
-    const addNewRow = () => {
-        setWrongDataLines([...wrongDataLines, { item_name: '', value: '' }]);
-        setCorrectDataLines([...correctDataLines, { item_name: '', value: '' }]);
-    };
+    // Removed handleWrongDataChange, handleCorrectDataChange, and addNewRow - no longer needed
 
     const handleScreenshotChange = (e: ChangeEvent<HTMLInputElement>) => {
         const files = e.target.files;
@@ -119,27 +96,27 @@ const CreateTicket: React.FC = () => {
                 throw new Error('Minimal harus upload 1 screenshot data yang salah');
             }
 
-            // Combine wrong and correct data lines
+            // Create detail lines from descriptions
             const detailLines = [];
-            for (let i = 0; i < Math.max(wrongDataLines.length, correctDataLines.length); i++) {
-                if (wrongDataLines[i]?.item_name.trim() && wrongDataLines[i]?.value.trim()) {
-                    detailLines.push({
-                        side: 'wrong' as const,
-                        item_name: wrongDataLines[i].item_name,
-                        value: wrongDataLines[i].value,
-                    });
-                }
-                if (correctDataLines[i]?.item_name.trim() && correctDataLines[i]?.value.trim()) {
-                    detailLines.push({
-                        side: 'expected' as const,
-                        item_name: correctDataLines[i].item_name,
-                        value: correctDataLines[i].value,
-                    });
-                }
+
+            if (wrongDescription.trim()) {
+                detailLines.push({
+                    side: 'wrong' as const,
+                    item_name: 'Deskripsi Salah',
+                    value: wrongDescription.trim(),
+                });
+            }
+
+            if (correctDescription.trim()) {
+                detailLines.push({
+                    side: 'expected' as const,
+                    item_name: 'Deskripsi Benar',
+                    value: correctDescription.trim(),
+                });
             }
 
             if (detailLines.length === 0) {
-                throw new Error('Minimal harus ada 1 detail line dengan Item Name dan Value yang terisi');
+                throw new Error('Minimal harus mengisi Deskripsi Salah atau Deskripsi Benar');
             }
 
             const ticketPayload = {
@@ -357,114 +334,48 @@ const CreateTicket: React.FC = () => {
                                 </div>
                             </div>
 
-                            {/* Detail Lines Section */}
+                            {/* Detail Descriptions Section */}
                             <div className="space-y-4">
                                 <div className="flex items-center gap-2 pb-3 border-b border-slate-100">
-                                    <span className="material-symbols-outlined text-primary">analytics</span>
+                                    <span className="material-symbols-outlined text-primary">description</span>
                                     <h3 className="text-slate-900 text-base font-bold uppercase tracking-wide">
-                                        Detail Baris Perbaikan
+                                        Detail Perbaikan Data
                                     </h3>
                                 </div>
 
-                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                                    {/* Wrong Data Table */}
-                                    <div className="space-y-3">
-                                        <div className="flex items-center gap-2 px-1">
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                    {/* Wrong Description */}
+                                    <div className="space-y-2">
+                                        <div className="flex items-center gap-2">
                                             <span className="size-2 rounded-full bg-red-500"></span>
-                                            <span className="text-red-600 text-[11px] font-bold uppercase tracking-widest">
+                                            <label className="text-red-600 text-xs font-bold uppercase tracking-widest">
                                                 Data Salah (Sebelum)
-                                            </span>
+                                            </label>
                                         </div>
-                                        <div className="overflow-hidden rounded-xl border border-slate-200">
-                                            <table className="w-full">
-                                                <thead>
-                                                    <tr>
-                                                        <th className="table-header w-2/3">NAMA ITEM</th>
-                                                        <th className="table-header w-1/3 text-center border-l border-slate-200">QTY</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    {wrongDataLines.map((line, index) => (
-                                                        <tr key={index}>
-                                                            <td className="table-cell">
-                                                                <input
-                                                                    type="text"
-                                                                    className="w-full border-none bg-transparent p-0 focus:ring-0 text-sm placeholder-slate-300"
-                                                                    placeholder="Input item..."
-                                                                    value={line.item_name}
-                                                                    onChange={(e) => handleWrongDataChange(index, 'item_name', e.target.value)}
-                                                                />
-                                                            </td>
-                                                            <td className="table-cell border-l border-slate-200">
-                                                                <input
-                                                                    type="text"
-                                                                    className="w-full border-none bg-transparent p-0 focus:ring-0 text-sm text-center placeholder-slate-300"
-                                                                    placeholder="0"
-                                                                    value={line.value}
-                                                                    onChange={(e) => handleWrongDataChange(index, 'value', e.target.value)}
-                                                                />
-                                                            </td>
-                                                        </tr>
-                                                    ))}
-                                                </tbody>
-                                            </table>
-                                        </div>
+                                        <textarea
+                                            className="w-full min-h-[140px] rounded-xl border border-slate-200 p-4 focus:ring-4 focus:ring-red-500/10 focus:border-red-500 transition-all text-sm resize-none"
+                                            placeholder="Data salah yang perlu diubah, contoh : bayam 4 ikat"
+                                            value={wrongDescription}
+                                            onChange={(e) => setWrongDescription(e.target.value)}
+                                        />
                                     </div>
 
-                                    {/* Correct Data Table */}
-                                    <div className="space-y-3">
-                                        <div className="flex items-center gap-2 px-1">
+                                    {/* Correct Description */}
+                                    <div className="space-y-2">
+                                        <div className="flex items-center gap-2">
                                             <span className="size-2 rounded-full bg-green-500"></span>
-                                            <span className="text-green-600 text-[11px] font-bold uppercase tracking-widest">
+                                            <label className="text-green-600 text-xs font-bold uppercase tracking-widest">
                                                 Data Benar (Sesudah)
-                                            </span>
+                                            </label>
                                         </div>
-                                        <div className="overflow-hidden rounded-xl border border-slate-200">
-                                            <table className="w-full">
-                                                <thead>
-                                                    <tr>
-                                                        <th className="table-header w-2/3">NAMA ITEM</th>
-                                                        <th className="table-header w-1/3 text-center border-l border-slate-200">QTY</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    {correctDataLines.map((line, index) => (
-                                                        <tr key={index}>
-                                                            <td className="table-cell">
-                                                                <input
-                                                                    type="text"
-                                                                    className="w-full border-none bg-transparent p-0 focus:ring-0 text-sm placeholder-slate-300"
-                                                                    placeholder="Input item..."
-                                                                    value={line.item_name}
-                                                                    onChange={(e) => handleCorrectDataChange(index, 'item_name', e.target.value)}
-                                                                />
-                                                            </td>
-                                                            <td className="table-cell border-l border-slate-200">
-                                                                <input
-                                                                    type="text"
-                                                                    className="w-full border-none bg-transparent p-0 focus:ring-0 text-sm text-center placeholder-slate-300"
-                                                                    placeholder="0"
-                                                                    value={line.value}
-                                                                    onChange={(e) => handleCorrectDataChange(index, 'value', e.target.value)}
-                                                                />
-                                                            </td>
-                                                        </tr>
-                                                    ))}
-                                                </tbody>
-                                            </table>
-                                        </div>
+                                        <textarea
+                                            className="w-full min-h-[140px] rounded-xl border border-slate-200 p-4 focus:ring-4 focus:ring-green-500/10 focus:border-green-500 transition-all text-sm resize-none"
+                                            placeholder="Data benar yang seharusnya, contoh : bayam 7 ikat"
+                                            value={correctDescription}
+                                            onChange={(e) => setCorrectDescription(e.target.value)}
+                                        />
                                     </div>
                                 </div>
-
-                                {/* Add Row Button */}
-                                <button
-                                    type="button"
-                                    onClick={addNewRow}
-                                    className="mt-2 flex items-center justify-center gap-2 w-full py-3 border-2 border-dashed border-slate-200 rounded-xl text-slate-500 hover:border-primary hover:text-primary hover:bg-primary/5 transition-all text-sm font-semibold"
-                                >
-                                    <span className="material-symbols-outlined text-[20px]">add_circle</span>
-                                    Tambah Baris Baru
-                                </button>
                             </div>
 
                             {/* Screenshot Upload Section */}

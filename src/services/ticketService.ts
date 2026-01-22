@@ -30,8 +30,7 @@ export const getTickets = async (filters?: TicketFilters) => {
         updated_at,
         branch:m_branches(id, name),
         feature:m_features(id, name),
-        reporter:profiles!datafix_tickets_reporter_user_id_fkey(id, full_name),
-        assignee:profiles!datafix_tickets_assigned_to_fkey(id, full_name)
+        reporter:profiles!datafix_tickets_reporter_user_id_fkey(id, full_name)
       `)
             .order('created_at', { ascending: false });
 
@@ -76,7 +75,6 @@ export const getTicketById = async (id: string) => {
         branch:m_branches(id, name),
         feature:m_features(id, name),
         reporter:profiles!datafix_tickets_reporter_user_id_fkey(id, full_name, role),
-        assignee:profiles!datafix_tickets_assigned_to_fkey(id, full_name, role),
         attachments:ticket_attachments(id, ticket_id, file_path, file_name, mime_type, created_at),
         detail_lines:ticket_detail_lines(id, ticket_id, side, item_name, value, note, created_at),
         status_history:ticket_status_history(id, ticket_id, changed_by, created_at)
@@ -141,7 +139,13 @@ export const deleteTicket = async (id: string) => {
 export const getTicketStats = async () => {
     try {
         const { data, error } = await supabase.rpc('get_ticket_stats');
-        return { data, error };
+
+        // RPC returns an array because of RETURNS TABLE, but we expect a single object
+        if (data && Array.isArray(data) && data.length > 0) {
+            return { data: data[0], error };
+        }
+
+        return { data: data as any, error };
     } catch (error) {
         return { data: null, error };
     }

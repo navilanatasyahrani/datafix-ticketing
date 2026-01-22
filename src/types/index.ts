@@ -20,7 +20,7 @@ export interface Ticket {
   branch?: Branch;
   feature?: Feature;
   reporter?: Profile;
-  assignee?: Profile;
+  // assignee removed as it is now a string name, not a relation
   attachments?: Attachment[];
   detail_lines?: DetailLine[];
   status_history?: StatusHistory[];
