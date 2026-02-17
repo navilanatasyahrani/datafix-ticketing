@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { User as SupabaseUser } from '@supabase/supabase-js';
 import { supabase } from '../services/supabase';
-import { Profile } from '../types';
+import { Profile, UserRole } from '../types';
 
 interface AuthContextType {
     user: SupabaseUser | null;
@@ -10,7 +10,9 @@ interface AuthContextType {
     signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
     signOut: () => Promise<void>;
     isAdmin: boolean;
-    isRequester: boolean;
+    /** Roles that can manage tickets (triage, redirect, resolve) */
+    canManageTickets: boolean;
+    userRole: string | null;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -26,6 +28,14 @@ export const useAuth = () => {
 interface AuthProviderProps {
     children: ReactNode;
 }
+
+// Roles that have ticket management privileges (triage/redirect/resolve)
+const MANAGER_ROLES: string[] = [
+    UserRole.ADMIN,
+    UserRole.ACCOUNTING_HO,
+    UserRole.FIN_ADMIN,
+    UserRole.IT_SABANG,
+];
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     const [user, setUser] = useState<SupabaseUser | null>(null);
@@ -61,7 +71,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         try {
             const { data, error } = await supabase
                 .from('profiles')
-                .select('*, branch:m_branches(*)')
+                .select('*, branch:m_branches(*), region:m_regions!region_id(*)')
                 .eq('id', userId)
                 .single();
 
@@ -92,14 +102,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setProfile(null);
     };
 
+    const role = profile?.role ?? null;
+
     const value: AuthContextType = {
         user,
         profile,
         loading,
         signIn,
         signOut,
-        isAdmin: profile?.role === 'admin',
-        isRequester: profile?.role === 'requester',
+        isAdmin: role === UserRole.ADMIN,
+        canManageTickets: role !== null && MANAGER_ROLES.includes(role),
+        userRole: role,
     };
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -10,7 +10,9 @@ export const getAllUsers = async () => {
             role,
             created_at,
             branch_id,
-            branch:m_branches(*)
+            region_id,
+            branch:m_branches(*),
+            region:m_regions!region_id(*)
         `)
         .order('created_at', { ascending: false });
 

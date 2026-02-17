@@ -1,9 +1,10 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { ROLE_LABELS } from '../types';
 
 const Sidebar: React.FC = () => {
-    const { profile, signOut } = useAuth();
+    const { profile, signOut, isAdmin } = useAuth();
 
     const handleSignOut = async () => {
         await signOut();
@@ -55,7 +56,7 @@ const Sidebar: React.FC = () => {
                     }
                 >
                     <span className="text-xl">➕</span>
-                    <span>Create Ticket</span>
+                    <span>Buat Ticket</span>
                 </NavLink>
 
                 <NavLink
@@ -70,6 +71,21 @@ const Sidebar: React.FC = () => {
                     <span className="text-xl">📋</span>
                     <span>Ticket List</span>
                 </NavLink>
+
+                {isAdmin && (
+                    <NavLink
+                        to="/users"
+                        className={({ isActive }) =>
+                            `flex items-center gap-4 px-4 py-3 rounded-xl font-semibold transition-all ${isActive
+                                ? 'bg-blue-600 text-white'
+                                : 'text-slate-400 hover:bg-slate-800 hover:text-white'
+                            }`
+                        }
+                    >
+                        <span className="text-xl">👥</span>
+                        <span>User Management</span>
+                    </NavLink>
+                )}
             </nav>
 
             <div className="pt-6 border-t border-slate-800">
@@ -79,7 +95,9 @@ const Sidebar: React.FC = () => {
                     </div>
                     <div className="flex-1 min-w-0">
                         <div className="font-bold text-sm truncate">{profile?.full_name || 'User'}</div>
-                        <div className="text-xs text-slate-400 capitalize">{profile?.role || 'user'}</div>
+                        <div className="text-xs text-slate-400">
+                            {profile?.role ? (ROLE_LABELS[profile.role] || profile.role) : 'user'}
+                        </div>
                     </div>
                 </div>
                 <button

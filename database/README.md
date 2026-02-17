@@ -26,7 +26,27 @@
    - Klik **Table Editor** di sidebar
    - Anda akan melihat semua tabel yang baru dibuat
 
-### 2. Setup Storage Bucket
+
+### 2. Add New Branches (Optional)
+
+If you need to add the latest branch options, run the additional script:
+
+1. **Open SQL Editor**
+   - In Supabase Dashboard, click **SQL Editor**
+   - Click **New query**
+
+2. **Run Branch Addition Script**
+   - Open file `add_new_branches.sql`
+   - Copy and paste into SQL Editor
+   - Click **Run**
+   - This will add:
+     - Office : Jabodetabek
+     - Produksi Jabodetabek
+     - Pusat Distribusi : Jabodetabek
+     - Office : Pontianak
+
+### 3. Setup Storage Bucket
+
 
 Setelah menjalankan SQL script, setup storage bucket:
 
@@ -59,7 +79,7 @@ Setelah menjalankan SQL script, setup storage bucket:
      USING (bucket_id = 'ticket-attachments');
      ```
 
-### 3. Create Admin User
+### 4. Create Admin User
 
 Untuk membuat user admin pertama kali:
 
@@ -79,7 +99,7 @@ Untuk membuat user admin pertama kali:
    WHERE id = 'USER_ID_HERE';
    ```
 
-### 4. Verify Setup
+### 5. Verify Setup
 
 Checklist untuk memastikan setup berhasil:
 
@@ -92,7 +112,7 @@ Checklist untuk memastikan setup berhasil:
 - [ ] Trigger `handle_new_user()` sudah aktif
 - [ ] User admin sudah dibuat
 
-### 5. Test dari Aplikasi
+### 6. Test dari Aplikasi
 
 Jalankan aplikasi dan test:
 

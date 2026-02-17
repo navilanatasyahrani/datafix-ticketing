@@ -404,7 +404,12 @@ const Dashboard: React.FC = () => {
           )}
         </div>
 
-        <div className="h-20"></div>
+        {/* Footer Copyright */}
+        <div className="text-center py-6 mt-6">
+          <p className="text-[12px] text-slate-400">
+            © {new Date().getFullYear()} PT Sabang Digital Indonesia. All Rights Reserved.
+          </p>
+        </div>
       </main>
     </Layout >
   );

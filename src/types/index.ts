@@ -1,3 +1,15 @@
+// ========================================
+// REGION
+// ========================================
+export interface Region {
+  id: string;
+  region_name: string;
+  region_code: number;
+}
+
+// ========================================
+// TICKET
+// ========================================
 export interface Ticket {
   id: string;
   reporter_user_id?: string;
@@ -8,6 +20,7 @@ export interface Ticket {
   feature_id?: string;
   feature_other?: string;
   inputter_name?: string;
+  wrong_input_username?: string;
   description: string;
   fix_description?: string;
   status: TicketStatus;
@@ -16,11 +29,21 @@ export interface Ticket {
   created_at: string;
   updated_at: string;
 
+  // New columns
+  origin_region_id?: string;
+  target_team?: string;
+  stage?: string;
+  triaged_by?: string;
+  triaged_at?: string;
+  current_queue: string;
+  redirected_by?: string;
+  redirected_at?: string;
+
   // Relations
   branch?: Branch;
   feature?: Feature;
   reporter?: Profile;
-  // assignee removed as it is now a string name, not a relation
+  origin_region?: Region;
   attachments?: Attachment[];
   detail_lines?: DetailLine[];
   status_history?: StatusHistory[];
@@ -34,13 +57,21 @@ export enum TicketStatus {
   PENDING = "pending", // Deprecated, mapped to OPEN in UI
 }
 
+// ========================================
+// BRANCH
+// ========================================
 export interface Branch {
   id: string;
   name: string;
   is_active: boolean;
+  region_id?: string;
   created_at: string;
+  region?: Region;
 }
 
+// ========================================
+// FEATURE
+// ========================================
 export interface Feature {
   id: string;
   name: string;
@@ -48,22 +79,33 @@ export interface Feature {
   created_at: string;
 }
 
+// ========================================
+// PROFILE / USER
+// ========================================
 export interface Profile {
   id: string;
   full_name: string;
-  display_name?: string; // Added per user request
-  email?: string; // Added for display fallback
+  display_name?: string;
+  email?: string;
   role: UserRole;
   branch_id?: string;
+  region_id?: string;
   created_at: string;
   branch?: Branch;
+  region?: Region;
 }
 
 export enum UserRole {
-  REQUESTER = "requester",
   ADMIN = "admin",
+  ACCOUNTING_HO = "ACCOUNTING_HO",
+  OUTLET = "OUTLET",
+  FIN_ADMIN = "FIN_ADMIN",
+  IT_SABANG = "IT_SABANG",
 }
 
+// ========================================
+// TICKET SUB-ENTITIES
+// ========================================
 export interface Attachment {
   id: string;
   ticket_id: string;
@@ -97,3 +139,14 @@ export interface User {
   email?: string;
   profile?: Profile;
 }
+
+// ========================================
+// HELPER: Human-readable role labels
+// ========================================
+export const ROLE_LABELS: Record<string, string> = {
+  [UserRole.ADMIN]: "Super Admin",
+  [UserRole.ACCOUNTING_HO]: "Accounting HO",
+  [UserRole.OUTLET]: "Outlet",
+  [UserRole.FIN_ADMIN]: "Finance Admin",
+  [UserRole.IT_SABANG]: "IT Sabang",
+};

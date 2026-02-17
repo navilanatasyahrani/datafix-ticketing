@@ -5,6 +5,11 @@ interface TicketFilters {
     status?: TicketStatus;
     branch_id?: string;
     assigned_to?: string;
+    origin_region_id?: string;
+
+    target_team?: string;
+    stage?: string;
+    current_queue?: string;
 }
 
 export const getTickets = async (filters?: TicketFilters) => {
@@ -21,6 +26,7 @@ export const getTickets = async (filters?: TicketFilters) => {
         feature_id,
         feature_other,
         inputter_name,
+        wrong_input_username,
         description,
         fix_description,
         status,
@@ -28,9 +34,19 @@ export const getTickets = async (filters?: TicketFilters) => {
         assigned_to,
         created_at,
         updated_at,
+        origin_region_id,
+        target_team,
+
+        stage,
+        triaged_by,
+        triaged_at,
+        current_queue,
+        redirected_by,
+        redirected_at,
         branch:m_branches(id, name),
         feature:m_features(id, name),
-        reporter:profiles!datafix_tickets_reporter_user_id_fkey(id, full_name)
+        reporter:profiles!reporter_user_id(id, full_name),
+        origin_region:m_regions!origin_region_id(id, region_name)
       `)
             .order('created_at', { ascending: false });
 
@@ -42,6 +58,19 @@ export const getTickets = async (filters?: TicketFilters) => {
         }
         if (filters?.assigned_to) {
             query = query.eq('assigned_to', filters.assigned_to);
+        }
+        if (filters?.origin_region_id) {
+            query = query.eq('origin_region_id', filters.origin_region_id);
+        }
+
+        if (filters?.target_team) {
+            query = query.eq('target_team', filters.target_team);
+        }
+        if (filters?.stage) {
+            query = query.eq('stage', filters.stage);
+        }
+        if (filters?.current_queue) {
+            query = query.eq('current_queue', filters.current_queue);
         }
 
         const { data, error } = await query;
@@ -65,6 +94,7 @@ export const getTicketById = async (id: string) => {
         feature_id,
         feature_other,
         inputter_name,
+        wrong_input_username,
         description,
         fix_description,
         status,
@@ -72,9 +102,19 @@ export const getTicketById = async (id: string) => {
         assigned_to,
         created_at,
         updated_at,
+        origin_region_id,
+        target_team,
+
+        stage,
+        triaged_by,
+        triaged_at,
+        current_queue,
+        redirected_by,
+        redirected_at,
         branch:m_branches(id, name),
         feature:m_features(id, name),
-        reporter:profiles!datafix_tickets_reporter_user_id_fkey(id, full_name, role),
+        reporter:profiles!reporter_user_id(id, full_name, role),
+        origin_region:m_regions!origin_region_id(id, region_name),
         attachments:ticket_attachments(id, ticket_id, file_path, file_name, mime_type, created_at),
         detail_lines:ticket_detail_lines(id, ticket_id, side, item_name, value, note, created_at),
         status_history:ticket_status_history(id, ticket_id, changed_by, created_at)
@@ -93,10 +133,22 @@ export const createTicket = async (ticketData: Partial<Ticket>) => {
         const { data, error } = await supabase
             .from('datafix_tickets')
             .insert([ticketData])
-            .select()
+            .select('id')
             .single();
 
-        return { data: data as Ticket | null, error };
+        if (error) return { data: null, error };
+
+        // Try to fetch the full ticket (may fail if SELECT RLS blocks)
+        if (data?.id) {
+            const { data: fullTicket } = await supabase
+                .from('datafix_tickets')
+                .select('*, reporter:profiles!datafix_tickets_reporter_user_id_fkey(full_name, email), branch:m_branches!datafix_tickets_branch_id_fkey(name), feature:m_features!datafix_tickets_feature_id_fkey(name)')
+                .eq('id', data.id)
+                .single();
+            return { data: fullTicket as Ticket | null, error: null };
+        }
+
+        return { data: null, error: null };
     } catch (error) {
         return { data: null, error };
     }
@@ -104,16 +156,36 @@ export const createTicket = async (ticketData: Partial<Ticket>) => {
 
 export const updateTicket = async (id: string, updates: Partial<Ticket>) => {
     try {
-        const { data, error } = await supabase
+        const { error } = await supabase
             .from('datafix_tickets')
             .update(updates)
+            .eq('id', id);
+
+        if (error) return { data: null, error };
+
+        // Fetch the ticket separately (may return null if RLS blocks after redirect)
+        const { data } = await supabase
+            .from('datafix_tickets')
+            .select('*, reporter:profiles!datafix_tickets_reporter_user_id_fkey(full_name, email), branch:m_branches!datafix_tickets_branch_id_fkey(name), feature:m_features!datafix_tickets_feature_id_fkey(name)')
             .eq('id', id)
-            .select()
             .single();
 
-        return { data: data as Ticket | null, error };
+        return { data: data as Ticket | null, error: null };
     } catch (error) {
         return { data: null, error };
+    }
+};
+
+export const redirectTicket = async (ticketId: string, targetTeam: string, currentQueue: string) => {
+    try {
+        const { error } = await supabase.rpc('redirect_ticket', {
+            p_ticket_id: ticketId,
+            p_target_team: targetTeam,
+            p_current_queue: currentQueue,
+        });
+        return { error };
+    } catch (error) {
+        return { error };
     }
 };
 

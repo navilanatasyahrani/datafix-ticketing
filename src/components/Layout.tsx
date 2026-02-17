@@ -66,7 +66,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                                 }`
                             }
                         >
-                            Create Ticket
+                            Tambah Tiket
                         </NavLink>
                         <NavLink
                             to="/tickets"
@@ -154,40 +154,51 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             </header>
 
             {/* Main Content */}
-            <div className="min-h-[calc(100vh-64px)]">
+            <div className="min-h-[calc(100vh-64px)] pb-20 md:pb-0">
                 {children}
             </div>
 
             {/* Mobile Bottom Navigation */}
-            <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 flex justify-around p-4 z-50 shadow-2xl">
+            <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 flex justify-around items-center px-2 py-3 z-50 shadow-2xl">
                 <NavLink
                     to="/"
                     end
                     className={({ isActive }) =>
-                        `p-2 transition-all ${isActive ? 'text-primary scale-110' : 'text-slate-400'}`
+                        `flex flex-col items-center gap-0.5 p-1.5 transition-all ${isActive ? 'text-primary' : 'text-slate-400'}`
                     }
                 >
-                    <span className="material-symbols-outlined">home</span>
+                    <span className="material-symbols-outlined text-[22px]">home</span>
+                    <span className="text-[10px] font-medium">Home</span>
                 </NavLink>
                 <NavLink
                     to="/tickets/new"
                     className={({ isActive }) =>
-                        `p-2 transition-all ${isActive ? 'text-primary scale-110' : 'text-slate-400'}`
+                        `flex flex-col items-center gap-0.5 p-1.5 transition-all ${isActive ? 'text-primary' : 'text-slate-400'}`
                     }
                 >
-                    <span className="material-symbols-outlined">add_circle</span>
+                    <span className="material-symbols-outlined text-[22px]">add_circle</span>
+                    <span className="text-[10px] font-medium">Tambah</span>
                 </NavLink>
                 <NavLink
                     to="/tickets"
                     className={({ isActive }) =>
-                        `p-2 transition-all ${isActive ? 'text-primary scale-110' : 'text-slate-400'}`
+                        `flex flex-col items-center gap-0.5 p-1.5 transition-all ${isActive ? 'text-primary' : 'text-slate-400'}`
                     }
                 >
-                    <span className="material-symbols-outlined">list_alt</span>
+                    <span className="material-symbols-outlined text-[22px]">list_alt</span>
+                    <span className="text-[10px] font-medium">Progress</span>
                 </NavLink>
-                <button onClick={handleSignOut} className="p-2 text-slate-400">
-                    <span className="material-symbols-outlined">logout</span>
-                </button>
+                {profile?.role === 'admin' && (
+                    <NavLink
+                        to="/users"
+                        className={({ isActive }) =>
+                            `flex flex-col items-center gap-0.5 p-1.5 transition-all ${isActive ? 'text-primary' : 'text-slate-400'}`
+                        }
+                    >
+                        <span className="material-symbols-outlined text-[22px]">group</span>
+                        <span className="text-[10px] font-medium">Users</span>
+                    </NavLink>
+                )}
             </nav>
         </div>
     );

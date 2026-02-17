@@ -3,7 +3,7 @@ import { id as localeId } from "date-fns/locale";
 import { TicketStatus } from "../types";
 
 export const formatDate = (date: string | Date): string => {
-  return format(new Date(date), "dd MMM yyyy HH:mm", { locale: localeId });
+  return format(new Date(date), "dd MMM yyyy", { locale: localeId });
 };
 
 export const formatDateShort = (date: string | Date): string => {

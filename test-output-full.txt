@@ -1,0 +1,424 @@
+﻿
+[1m[46m RUN [49m[22m [36mv4.0.18 [39m[90mD:/ProjectCoding/datafix-ticketing[39m
+
+node.exe : 
+[90mstderr[2m | src
+/__tests__/services/m
+asterDataService.test
+.ts[2m > [22m[2mge
+tBranches[2m > 
+[22m[2m4.2 - saat 
+error ΓåÆ return { 
+data: null, error }
+At C:\Program Files\n
+odejs\npx.ps1:29 
+char:3
++   & $NODE_EXE 
+$NPX_CLI_JS $args
++   ~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~
+    + CategoryInfo   
+           : NotSpe  
+  cified: ([90mst   
+ derr[2m...: nul    
+l, error }:Strin    
+g) [], RemoteExc    
+eption
+    + FullyQualified 
+   ErrorId : Native  
+  CommandError
+ 
+[22m[39mgetBranches
+ exception: Error: 
+DB error
+    at 
+Object.<anonymous> (D
+:/ProjectCoding/dataf
+ix-ticketing/src/__te
+sts__/services/master
+DataService.test.ts:5
+7:19)
+    at Object.Mock [
+90m(file:///D:/Projec
+tCoding/datafix-ticke
+ting/[39mnode_module
+s/[4m@vitest[24m/sp
+y/dist/index.js:285:3
+4[90m)[39m
+    at 
+Module.getBranches (D
+:/ProjectCoding/dataf
+ix-ticketing/src/serv
+ices/masterDataServic
+e.ts:7:14)
+    at D:/ProjectCodi
+ng/datafix-ticketing/
+src/__tests__/service
+s/masterDataService.t
+est.ts:60:30
+    at [90mfile:///D
+:/ProjectCoding/dataf
+ix-ticketing/[39mnod
+e_modules/[4m@vitest
+[24m/runner/dist/ind
+ex.js:145:11
+    at [90mfile:///D
+:/ProjectCoding/dataf
+ix-ticketing/[39mnod
+e_modules/[4m@vitest
+[24m/runner/dist/ind
+ex.js:915:26
+    at [90mfile:///D
+:/ProjectCoding/dataf
+ix-ticketing/[39mnod
+e_modules/[4m@vitest
+[24m/runner/dist/ind
+ex.js:1243:20
+    at new Promise 
+(<anonymous>)
+    at 
+runWithTimeout [90m(
+file:///D:/ProjectCod
+ing/datafix-ticketing
+/[39mnode_modules/[
+4m@vitest[24m/runner
+/dist/index.js:1209:1
+0[90m)[39m
+    at [90mfile:///D
+:/ProjectCoding/dataf
+ix-ticketing/[39mnod
+e_modules/[4m@vitest
+[24m/runner/dist/ind
+ex.js:1653:37
+
+ [32mΓ£ô[39m src/__tests__/services/masterDataService.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 42[2mms[22m[39m
+ [32mΓ£ô[39m src/__tests__/types/index.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+ [32mΓ£ô[39m src/__tests__/services/ticketService.test.ts [2m([22m[2m23 tests[22m[2m)[22m[32m 24[2mms[22m[39m
+ [32mΓ£ô[39m src/__tests__/services/userService.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+ [32mΓ£ô[39m src/__tests__/App.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[32m 86[2mms[22m[39m
+ [32mΓ£ô[39m src/__tests__/components/ProtectedRoute.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[32m 91[2mms[22m[39m
+ [32mΓ£ô[39m src/__tests__/contexts/AuthContext.test.tsx [2m([22m[2m12 tests[22m[2m)[22m[32m 261[2mms[22m[39m
+ [32mΓ£ô[39m src/__tests__/pages/CreateTicket.test.tsx [2m([22m[2m12 tests[22m[2m)[22m[33m 587[2mms[22m[39m
+ [32mΓ£ô[39m src/__tests__/pages/TicketDetail.test.tsx [2m([22m[2m15 tests[22m[2m)[22m[33m 734[2mms[22m[39m
+ [32mΓ£ô[39m src/__tests__/constants/assignees.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+[90mstderr[2m | src
+/__tests__/pages/Logi
+nPage.test.tsx[2m > 
+[22m[2mLoginPage - 
+form submission[2m 
+> [22m[2m9.5 - 
+submit form gagal 
+ΓåÆ error message 
+ditampilkan
+[22m[39mLogin 
+error details: {
+  "message": 
+"Invalid login 
+credentials"
+}
+
+ [32mΓ£ô[39m src/__tests__/components/SearchableSelect.test.tsx [2m([22m[2m15 tests[22m[2m)[22m[33m 1537[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m 8.13 - search tanpa hasil ΓåÆ tampilkan pesan "Tidak ada hasil..." [33m 331[2mms[22m[39m
+ [32mΓ£ô[39m src/__tests__/pages/UserManagement.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[32m 289[2mms[22m[39m
+ [32mΓ£ô[39m src/__tests__/pages/TicketList.test.tsx [2m([22m[2m10 tests[22m[2m)[22m[33m 433[2mms[22m[39m
+ [32mΓ£ô[39m src/__tests__/pages/LoginPage.test.tsx [2m([22m[2m7 tests[22m[2m)[22m[33m 1973[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m 9.4 - submit form berhasil ΓåÆ navigate ke "/" [33m 882[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m 9.5 - submit form gagal ΓåÆ error message ditampilkan [33m 499[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m 9.6 - loading state ΓåÆ tombol disabled, text berubah "Verifikasi..." [33m 484[2mms[22m[39m
+ [32mΓ£ô[39m src/__tests__/utils/formatters.test.ts [2m([22m[2m29 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+[90mstderr[2m | src
+/__tests__/pages/Dash
+board.test.tsx[2m > 
+[22m[2mDashboard - 
+welcome message[2m 
+> [22m[2m10.2 - 
+render welcome ΓåÆ 
+display_name 
+ditampilkan
+[22m[39mThe tag 
+<stop> is 
+unrecognized in this 
+browser. If you 
+meant to render a 
+React component, 
+start its name with 
+an uppercase letter.
+<linearGradient /> 
+is using incorrect 
+casing. Use 
+PascalCase for React 
+components, or 
+lowercase for HTML 
+elements.
+The tag 
+<linearGradient> is 
+unrecognized in this 
+browser. If you 
+meant to render a 
+React component, 
+start its name with 
+an uppercase letter.
+<linearGradient /> 
+is using incorrect 
+casing. Use 
+PascalCase for React 
+components, or 
+lowercase for HTML 
+elements.
+The tag <defs> is 
+unrecognized in this 
+browser. If you 
+meant to render a 
+React component, 
+start its name with 
+an uppercase letter.
+
+[90mstderr[2m | src
+/__tests__/pages/Dash
+board.test.tsx[2m > 
+[22m[2mDashboard - 
+stats cards[2m > 
+[22m[2m10.3 - 
+Stats cards: Total 
+Submissions, Active 
+Requests, Success 
+Rate
+[22m[39m<linearGrad
+ient /> is using 
+incorrect casing. 
+Use PascalCase for 
+React components, or 
+lowercase for HTML 
+elements.
+<linearGradient /> 
+is using incorrect 
+casing. Use 
+PascalCase for React 
+components, or 
+lowercase for HTML 
+elements.
+
+[90mstderr[2m | src
+/__tests__/pages/Dash
+board.test.tsx[2m > 
+[22m[2mDashboard - 
+stats cards[2m > 
+[22m[2m10.4 - 
+Active Requests = 
+open + in_progress
+[22m[39m<linearGrad
+ient /> is using 
+incorrect casing. 
+Use PascalCase for 
+React components, or 
+lowercase for HTML 
+elements.
+<linearGradient /> 
+is using incorrect 
+casing. Use 
+PascalCase for React 
+components, or 
+lowercase for HTML 
+elements.
+
+[90mstderr[2m | src
+/__tests__/pages/Dash
+board.test.tsx[2m > 
+[22m[2mDashboard - 
+stats cards[2m > 
+[22m[2m10.5 - 
+Success Rate = 
+(resolved / total * 
+100) dengan 1 desimal
+[22m[39m<linearGrad
+ient /> is using 
+incorrect casing. 
+Use PascalCase for 
+React components, or 
+lowercase for HTML 
+elements.
+<linearGradient /> 
+is using incorrect 
+casing. Use 
+PascalCase for React 
+components, or 
+lowercase for HTML 
+elements.
+
+[90mstderr[2m | src
+/__tests__/pages/Dash
+board.test.tsx[2m > 
+[22m[2mDashboard - 
+stats cards[2m > 
+[22m[2m10.6 - 
+Success Rate saat 
+total = 0 ΓåÆ "0.0%"
+[22m[39m<linearGrad
+ient /> is using 
+incorrect casing. 
+Use PascalCase for 
+React components, or 
+lowercase for HTML 
+elements.
+<linearGradient /> 
+is using incorrect 
+casing. Use 
+PascalCase for React 
+components, or 
+lowercase for HTML 
+elements.
+
+[90mstderr[2m | src
+/__tests__/pages/Dash
+board.test.tsx[2m > 
+[22m[2mDashboard - 
+stats cards[2m > 
+[22m[2m10.17 - 
+Stats mapping: 
+pending_tickets ΓåÆ 
+open_tickets (compat)
+[22m[39m<linearGrad
+ient /> is using 
+incorrect casing. 
+Use PascalCase for 
+React components, or 
+lowercase for HTML 
+elements.
+<linearGradient /> 
+is using incorrect 
+casing. Use 
+PascalCase for React 
+components, or 
+lowercase for HTML 
+elements.
+
+[90mstderr[2m | src
+/__tests__/pages/Dash
+board.test.tsx[2m > 
+[22m[2mDashboard - 
+charts 
+(admin-only)[2m > 
+[22m[2m10.7 - 
+Charts tampil untuk 
+admin (isAdmin === 
+true)
+[22m[39m<linearGrad
+ient /> is using 
+incorrect casing. 
+Use PascalCase for 
+React components, or 
+lowercase for HTML 
+elements.
+<linearGradient /> 
+is using incorrect 
+casing. Use 
+PascalCase for React 
+components, or 
+lowercase for HTML 
+elements.
+
+[90mstderr[2m | src
+/__tests__/pages/Dash
+board.test.tsx[2m > 
+[22m[2mDashboard - 
+navigation 
+buttons[2m > 
+[22m[2m10.10 - 
+klik "New Ticket" 
+ΓåÆ navigate ke 
+/tickets/new
+[22m[39m<linearGrad
+ient /> is using 
+incorrect casing. 
+Use PascalCase for 
+React components, or 
+lowercase for HTML 
+elements.
+<linearGradient /> 
+is using incorrect 
+casing. Use 
+PascalCase for React 
+components, or 
+lowercase for HTML 
+elements.
+
+[90mstderr[2m | src
+/__tests__/pages/Dash
+board.test.tsx[2m > 
+[22m[2mDashboard - 
+navigation 
+buttons[2m > 
+[22m[2m10.11 - 
+klik "View All" ΓåÆ 
+navigate ke /tickets
+[22m[39m<linearGrad
+ient /> is using 
+incorrect casing. 
+Use PascalCase for 
+React components, or 
+lowercase for HTML 
+elements.
+<linearGradient /> 
+is using incorrect 
+casing. Use 
+PascalCase for React 
+components, or 
+lowercase for HTML 
+elements.
+
+[90mstderr[2m | src
+/__tests__/pages/Dash
+board.test.tsx[2m > 
+[22m[2mDashboard - 
+recent 
+activities[2m > 
+[22m[2m10.9 - 
+recent activities 
+table ΓåÆ shows 
+ticket data
+[22m[39m<linearGrad
+ient /> is using 
+incorrect casing. 
+Use PascalCase for 
+React components, or 
+lowercase for HTML 
+elements.
+<linearGradient /> 
+is using incorrect 
+casing. Use 
+PascalCase for React 
+components, or 
+lowercase for HTML 
+elements.
+
+[90mstderr[2m | src
+/__tests__/pages/Dash
+board.test.tsx[2m > 
+[22m[2mDashboard - 
+recent 
+activities[2m > 
+[22m[2m10.12 - 
+empty state ΓåÆ "No 
+tickets found"
+[22m[39m<linearGrad
+ient /> is using 
+incorrect casing. 
+Use PascalCase for 
+React components, or 
+lowercase for HTML 
+elements.
+<linearGradient /> 
+is using incorrect 
+casing. Use 
+PascalCase for React 
+components, or 
+lowercase for HTML 
+elements.
+
+ [32mΓ£ô[39m src/__tests__/pages/Dashboard.test.tsx [2m([22m[2m16 tests[22m[2m)[22m[33m 648[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m16 passed[39m[22m[90m (16)[39m
+[2m      Tests [22m [1m[32m190 passed[39m[22m[90m (190)[39m
+[2m   Start at [22m 16:39:35
+[2m   Duration [22m 6.52s[2m (transform 4.28s, setup 3.27s, import 16.57s, tests 6.75s, environment 29.86s)[22m
+

@@ -1,15 +1,14 @@
 import React, { useState, useEffect, FormEvent, ChangeEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Layout from '../components/Layout';
+import SearchableSelect from '../components/SearchableSelect';
 import { createTicket, addDetailLines, uploadAttachment } from '../services/ticketService';
-import { getBranches, getAllFeatures } from '../services/masterDataService';
+import { getBranches, getAllFeatures, getRegions } from '../services/masterDataService';
 import { useAuth } from '../contexts/AuthContext';
-import { Branch, Feature } from '../types';
-
-// Removed DetailLineItem interface - now using simple text descriptions
+import { Branch, Feature, Region, UserRole } from '../types';
 
 const CreateTicket: React.FC = () => {
-    const { user } = useAuth();
+    const { user, profile, userRole } = useAuth();
     const navigate = useNavigate();
 
     const [loading, setLoading] = useState(false);
@@ -18,6 +17,7 @@ const CreateTicket: React.FC = () => {
 
     const [branches, setBranches] = useState<Branch[]>([]);
     const [features, setFeatures] = useState<Feature[]>([]);
+    const [regions, setRegions] = useState<Region[]>([]);
     const [screenshots, setScreenshots] = useState<File[]>([]);
     const [screenshotPreviews, setScreenshotPreviews] = useState<string[]>([]);
 
@@ -28,31 +28,56 @@ const CreateTicket: React.FC = () => {
         feature_id: '',
         feature_other: '',
         inputter_name: '',
+        wrong_input_username: '',
         description: '',
         priority: 2,
+        origin_region_id: '',
+        target_team: '',
     });
 
     const [wrongDescription, setWrongDescription] = useState('');
     const [correctDescription, setCorrectDescription] = useState('');
 
+    // Feature-specific fields
+    const [refundNominal, setRefundNominal] = useState('');
+    const [refundNamaPenerima, setRefundNamaPenerima] = useState('');
+    const [refundNamaBank, setRefundNamaBank] = useState('');
+    const [refundNoRek, setRefundNoRek] = useState('');
+    const [makanbangEmail, setMakanbangEmail] = useState('');
+    const [makanbangPosisi, setMakanbangPosisi] = useState('');
+
+    // Get selected feature name
+    const selectedFeatureName = features.find(f => f.id === formData.feature_id)?.name || '';
+
     useEffect(() => {
         loadMasterData();
     }, []);
 
+    // Auto-fill branch and region from user profile
+    useEffect(() => {
+        if (profile) {
+            setFormData(prev => ({
+                ...prev,
+                branch_id: prev.branch_id || profile.branch_id || '',
+                origin_region_id: prev.origin_region_id || profile.region_id || '',
+            }));
+        }
+    }, [profile]);
+
     const loadMasterData = async () => {
         const { data: branchesData } = await getBranches();
         const { data: featuresData } = await getAllFeatures();
+        const { data: regionsData } = await getRegions();
 
         if (branchesData) setBranches(branchesData);
         if (featuresData) setFeatures(featuresData);
+        if (regionsData) setRegions(regionsData);
     };
 
     const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
     };
-
-    // Removed handleWrongDataChange, handleCorrectDataChange, and addNewRow - no longer needed
 
     const handleScreenshotChange = (e: ChangeEvent<HTMLInputElement>) => {
         const files = e.target.files;
@@ -86,15 +111,35 @@ const CreateTicket: React.FC = () => {
         setScreenshotPreviews(prev => prev.filter((_, i) => i !== index));
     };
 
+    // Build description with feature-specific data
+    const buildDescription = () => {
+        let desc = formData.description;
+
+        if (selectedFeatureName === 'Refund Dana Customer') {
+            if (refundNominal) {
+                const formatted = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(Number(refundNominal));
+                desc += `\n\n[Nominal Refund Dana: ${formatted}]`;
+            }
+            if (refundNamaPenerima) desc += `\n[Nama Penerima: ${refundNamaPenerima}]`;
+            if (refundNamaBank) desc += `\n[Bank: ${refundNamaBank}]`;
+            if (refundNoRek) desc += `\n[No. Rekening: ${refundNoRek}]`;
+        }
+
+        if (selectedFeatureName === 'Akun Makanbang Staff') {
+            if (makanbangEmail) desc += `\n\n[Email Makanbang: ${makanbangEmail}]`;
+            if (makanbangPosisi) desc += `\n[Posisi: ${makanbangPosisi}]`;
+        }
+
+        return desc;
+    };
+
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
         setError('');
         setLoading(true);
 
         try {
-            if (screenshots.length === 0) {
-                throw new Error('Minimal harus upload 1 screenshot data yang salah');
-            }
+            // Screenshot upload is optional
 
             // Create detail lines from descriptions
             const detailLines = [];
@@ -119,10 +164,30 @@ const CreateTicket: React.FC = () => {
                 throw new Error('Minimal harus mengisi Deskripsi Salah atau Deskripsi Benar');
             }
 
-            const ticketPayload = {
-                ...formData,
-                reporter_user_id: user?.id,
+            // Determine queue routing based on role
+            let targetTeam = 'FIN_REGION';
+            let currentQueue = 'FIN_ADMIN';
+            if (userRole === UserRole.ACCOUNTING_HO) {
+                targetTeam = formData.target_team || 'ACC_HO';
+                // Map target_team to current_queue
+                const queueMap: Record<string, string> = { ACC_HO: 'ACCOUNTING_HO', IT_SABANG: 'IT_SABANG' };
+                currentQueue = queueMap[targetTeam] || 'ACCOUNTING_HO';
+            }
+
+            const ticketPayload: Record<string, any> = {
+                wrong_input_date: formData.wrong_input_date,
+                issue_type: formData.issue_type,
+                branch_id: formData.branch_id,
+                feature_id: formData.feature_id || null,
+                feature_other: formData.feature_other || null,
+                inputter_name: formData.inputter_name || null,
+                wrong_input_username: formData.wrong_input_username || null,
+                description: buildDescription(),
                 priority: parseInt(formData.priority.toString()),
+                reporter_user_id: user?.id,
+                origin_region_id: formData.origin_region_id || null,
+                target_team: targetTeam,
+                current_queue: currentQueue,
             };
 
             const { data: ticket, error: ticketError } = await createTicket(ticketPayload);
@@ -146,7 +211,7 @@ const CreateTicket: React.FC = () => {
                 navigate('/tickets');
             }, 2000);
         } catch (err: any) {
-            setError(err.message || 'Failed to create ticket');
+            setError(err.message || 'gagal membuat tiket');
             setLoading(false);
         }
     };
@@ -156,7 +221,7 @@ const CreateTicket: React.FC = () => {
             <Layout>
                 <div className="bg-green-50 border border-green-200 text-green-700 px-6 py-4 rounded-2xl max-w-2xl mx-auto flex items-center gap-3">
                     <span className="text-2xl">✅</span>
-                    <span className="font-bold">Ticket created successfully! Redirecting...</span>
+                    <span className="font-bold">Tiket berhasil dibuat! </span>
                 </div>
             </Layout>
         );
@@ -189,7 +254,84 @@ const CreateTicket: React.FC = () => {
                         <form onSubmit={handleSubmit} className="flex flex-col gap-10">
                             {/* Basic Information */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-6">
-                                {/* Wrong Input Date */}
+                                {/* 1. Region */}
+                                <div>
+                                    <label className="form-label">Region</label>
+                                    {profile?.region_id ? (
+                                        <div className="w-full rounded-lg border border-slate-200 bg-slate-50 h-11 px-4 flex items-center text-sm text-slate-600">
+                                            <span className="material-symbols-outlined text-[16px] text-slate-400 mr-2">lock</span>
+                                            {regions.find(r => r.id === formData.origin_region_id)?.region_name || 'Memuat...'}
+                                        </div>
+                                    ) : (
+                                        <div className="relative">
+                                            <select
+                                                name="origin_region_id"
+                                                className="w-full rounded-lg border border-slate-200 bg-white h-11 px-4 focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all text-sm appearance-none"
+                                                value={formData.origin_region_id}
+                                                onChange={(e) => setFormData(prev => ({ ...prev, origin_region_id: e.target.value, branch_id: '' }))}
+                                            >
+                                                <option value="">Pilih Region Asal</option>
+                                                {regions.map(r => (
+                                                    <option key={r.id} value={r.id}>{r.region_name}</option>
+                                                ))}
+                                            </select>
+                                            <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
+                                                expand_more
+                                            </span>
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* 2. Cabang */}
+                                <div>
+                                    <label className="form-label">Cabang</label>
+                                    {profile?.branch_id ? (
+                                        <div className="w-full rounded-lg border border-slate-200 bg-slate-50 h-11 px-4 flex items-center text-sm text-slate-600">
+                                            <span className="material-symbols-outlined text-[16px] text-slate-400 mr-2">lock</span>
+                                            {branches.find(b => b.id === formData.branch_id)?.name || 'Memuat...'}
+                                        </div>
+                                    ) : (
+                                        <SearchableSelect
+                                            options={formData.origin_region_id
+                                                ? branches.filter(b => b.region_id === formData.origin_region_id)
+                                                : branches
+                                            }
+                                            value={formData.branch_id}
+                                            onChange={(value) => setFormData(prev => ({ ...prev, branch_id: value }))}
+                                            placeholder="Pilih Cabang"
+                                            required
+                                            name="branch_id"
+                                        />
+                                    )}
+                                </div>
+
+                                {/* 3. Nama Penginput Perbaikan */}
+                                <div>
+                                    <label className="form-label">Nama Penginput Perbaikan</label>
+                                    <input
+                                        type="text"
+                                        name="inputter_name"
+                                        className="w-full rounded-lg border border-slate-200 h-11 px-4 focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all text-sm"
+                                        placeholder="Orang yang bertanggung jawab"
+                                        value={formData.inputter_name}
+                                        onChange={handleChange}
+                                    />
+                                </div>
+
+                                {/* 4. Username yang Login (ketika input salah) */}
+                                <div>
+                                    <label className="form-label">Username yang Login (Ketika Input Salah)</label>
+                                    <input
+                                        type="text"
+                                        name="wrong_input_username"
+                                        className="w-full rounded-lg border border-slate-200 h-11 px-4 focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all text-sm"
+                                        placeholder="Contoh: spv_serdam"
+                                        value={formData.wrong_input_username}
+                                        onChange={handleChange}
+                                    />
+                                </div>
+
+                                {/* 5. Tanggal Kesalahan */}
                                 <div>
                                     <label className="form-label">Tanggal Input Salah</label>
                                     <input
@@ -202,13 +344,13 @@ const CreateTicket: React.FC = () => {
                                     />
                                 </div>
 
-                                {/* Issue Type */}
+                                {/* 5. Tipe Issue */}
                                 <div>
                                     <label className="form-label">Tipe Isu</label>
                                     <div className="relative">
                                         <select
                                             name="issue_type"
-                                            className="w-full rounded-lg border border-slate-200 h-11 px-4 focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all text-sm appearance-none"
+                                            className="w-full rounded-lg border border-slate-200 bg-white h-11 px-4 focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all text-sm appearance-none"
                                             value={formData.issue_type}
                                             onChange={handleChange}
                                             required
@@ -226,48 +368,17 @@ const CreateTicket: React.FC = () => {
                                     </div>
                                 </div>
 
-                                {/* Branch */}
-                                <div>
-                                    <label className="form-label">Cabang</label>
-                                    <div className="relative">
-                                        <select
-                                            name="branch_id"
-                                            className="w-full rounded-lg border border-slate-200 h-11 px-4 focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all text-sm appearance-none"
-                                            value={formData.branch_id}
-                                            onChange={handleChange}
-                                            required
-                                        >
-                                            <option value="">Pilih Cabang</option>
-                                            {branches.map(branch => (
-                                                <option key={branch.id} value={branch.id}>{branch.name}</option>
-                                            ))}
-                                        </select>
-                                        <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
-                                            expand_more
-                                        </span>
-                                    </div>
-                                </div>
-
-                                {/* Feature */}
+                                {/* 6. Fitur Utama */}
                                 <div>
                                     <label className="form-label">Fitur Utama</label>
-                                    <div className="relative">
-                                        <select
-                                            name="feature_id"
-                                            className="w-full rounded-lg border border-slate-200 h-11 px-4 focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all text-sm appearance-none"
-                                            value={formData.feature_id}
-                                            onChange={handleChange}
-                                            required
-                                        >
-                                            <option value="">Pilih Fitur</option>
-                                            {features.map(feat => (
-                                                <option key={feat.id} value={feat.id}>{feat.name}</option>
-                                            ))}
-                                        </select>
-                                        <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
-                                            expand_more
-                                        </span>
-                                    </div>
+                                    <SearchableSelect
+                                        options={features}
+                                        value={formData.feature_id}
+                                        onChange={(value) => setFormData(prev => ({ ...prev, feature_id: value }))}
+                                        placeholder="Pilih Fitur"
+                                        required
+                                        name="feature_id"
+                                    />
                                 </div>
 
                                 {/* Custom Feature Input - shown when "Lainnya" is selected */}
@@ -286,26 +397,102 @@ const CreateTicket: React.FC = () => {
                                     </div>
                                 )}
 
-                                {/* Inputter Name */}
-                                <div>
-                                    <label className="form-label">PIC</label>
-                                    <input
-                                        type="text"
-                                        name="inputter_name"
-                                        className="w-full rounded-lg border border-slate-200 h-11 px-4 focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all text-sm"
-                                        placeholder="Orang yang bertanggung jawab"
-                                        value={formData.inputter_name}
-                                        onChange={handleChange}
-                                    />
-                                </div>
+                                {/* Refund Dana Customer */}
+                                {selectedFeatureName === 'Refund Dana Customer' && (
+                                    <>
+                                        <div>
+                                            <label className="form-label">Nominal Refund Dana</label>
+                                            <div className="relative">
+                                                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm">Rp</span>
+                                                <input
+                                                    type="text"
+                                                    className="w-full rounded-lg border border-slate-200 h-11 pl-10 pr-4 focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all text-sm"
+                                                    placeholder="Contoh: 150000"
+                                                    value={refundNominal}
+                                                    onChange={(e) => setRefundNominal(e.target.value.replace(/[^0-9]/g, ''))}
+                                                    required
+                                                />
+                                            </div>
+                                            {refundNominal && (
+                                                <p className="text-xs text-slate-400 mt-1">
+                                                    {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(Number(refundNominal))}
+                                                </p>
+                                            )}
+                                        </div>
+                                        <div className="md:col-span-2">
+                                            <label className="form-label">Informasi Rekening untuk Refund</label>
+                                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                                <div>
+                                                    <input
+                                                        type="text"
+                                                        className="w-full rounded-lg border border-slate-200 h-11 px-4 focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all text-sm"
+                                                        placeholder="Nama Penerima"
+                                                        value={refundNamaPenerima}
+                                                        onChange={(e) => setRefundNamaPenerima(e.target.value)}
+                                                        required
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <input
+                                                        type="text"
+                                                        className="w-full rounded-lg border border-slate-200 h-11 px-4 focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all text-sm"
+                                                        placeholder="Nama Bank (contoh: BCA, BNI)"
+                                                        value={refundNamaBank}
+                                                        onChange={(e) => setRefundNamaBank(e.target.value)}
+                                                        required
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <input
+                                                        type="text"
+                                                        className="w-full rounded-lg border border-slate-200 h-11 px-4 focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all text-sm"
+                                                        placeholder="No. Rekening"
+                                                        value={refundNoRek}
+                                                        onChange={(e) => setRefundNoRek(e.target.value.replace(/[^0-9]/g, ''))}
+                                                        required
+                                                    />
+                                                </div>
+                                            </div>
+                                            <p className="text-xs text-slate-400 mt-2">Tulis data rekening secara lengkap dan benar untuk proses refund</p>
+                                        </div>
+                                    </>
+                                )}
 
-                                {/* Priority */}
+                                {/* Akun Makanbang Staff - Email & Posisi */}
+                                {selectedFeatureName === 'Akun Makanbang Staff' && (
+                                    <>
+                                        <div>
+                                            <label className="form-label">Email Akun Makanbang</label>
+                                            <input
+                                                type="email"
+                                                className="w-full rounded-lg border border-slate-200 h-11 px-4 focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all text-sm"
+                                                placeholder="email@contoh.com"
+                                                value={makanbangEmail}
+                                                onChange={(e) => setMakanbangEmail(e.target.value)}
+                                                required
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="form-label">Posisi</label>
+                                            <input
+                                                type="text"
+                                                className="w-full rounded-lg border border-slate-200 h-11 px-4 focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all text-sm"
+                                                placeholder="Contoh: Waiter, Kasir, Superuser"
+                                                value={makanbangPosisi}
+                                                onChange={(e) => setMakanbangPosisi(e.target.value)}
+                                                required
+                                            />
+                                        </div>
+                                    </>
+                                )}
+
+                                {/* 7. Tingkat Prioritas */}
                                 <div>
                                     <label className="form-label">Tingkat Prioritas</label>
                                     <div className="relative">
                                         <select
                                             name="priority"
-                                            className="w-full rounded-lg border border-slate-200 h-11 px-4 focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all text-sm appearance-none"
+                                            className="w-full rounded-lg border border-slate-200 bg-white h-11 px-4 focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all text-sm appearance-none"
                                             value={formData.priority}
                                             onChange={handleChange}
                                             required
@@ -319,8 +506,28 @@ const CreateTicket: React.FC = () => {
                                         </span>
                                     </div>
                                 </div>
+                                {/* 8. Tim Tujuan - only for ACCOUNTING_HO */}
+                                {userRole === UserRole.ACCOUNTING_HO && (
+                                    <div>
+                                        <label className="form-label">Tim Tujuan</label>
+                                        <div className="relative">
+                                            <select
+                                                name="target_team"
+                                                className="w-full rounded-lg border border-slate-200 bg-white h-11 px-4 focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all text-sm appearance-none"
+                                                value={formData.target_team}
+                                                onChange={handleChange}
+                                            >
+                                                <option value="ACC_HO">Accounting HO</option>
+                                                <option value="IT_SABANG">IT Sabang</option>
+                                            </select>
+                                            <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
+                                                expand_more
+                                            </span>
+                                        </div>
+                                    </div>
+                                )}
 
-                                {/* Description */}
+                                {/* 9. Deskripsi Permasalahan */}
                                 <div className="md:col-span-2">
                                     <label className="form-label">Deskripsi Permasalahan</label>
                                     <textarea
@@ -495,7 +702,7 @@ const CreateTicket: React.FC = () => {
                     {/* Footer Copyright */}
                     <div className="text-center py-4">
                         <p className="text-[12px] text-slate-400">
-                            © 2024 DataCare. Layanan Pelaporan Koreksi Data Terpadu Versi 2.1.0-Release.
+                            © {new Date().getFullYear()} PT Sabang Digital Indonesia. All Rights Reserved.
                         </p>
                     </div>
                 </div>

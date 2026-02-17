@@ -18,6 +18,7 @@ const LoginPage: React.FC = () => {
         const { error } = await signIn(email, password);
 
         if (error) {
+            console.error('Login error details:', JSON.stringify(error, null, 2));
             setError(error.message || 'Failed to sign in');
             setLoading(false);
         } else {
