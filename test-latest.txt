@@ -1,0 +1,1038 @@
+﻿
+[1m[46m RUN [49m[22m [36mv4.0.18 [39m[90mD:/ProjectCoding/datafix-ticketing[39m
+
+ [32mΓ£ô[39m src/__tests__/types/index.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 23[2mms[22m[39m
+node.exe : 
+[90mstderr[2m | src
+/__tests__/services/m
+asterDataService.test
+.ts[2m > [22m[2mge
+tBranches[2m > 
+[22m[2m4.2 - saat 
+error ΓåÆ return { 
+data: null, error }
+At C:\Program Files\n
+odejs\npx.ps1:29 
+char:3
++   & $NODE_EXE 
+$NPX_CLI_JS $args
++   ~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~
+    + CategoryInfo   
+           : NotSpe  
+  cified: ([90mst   
+ derr[2m...: nul    
+l, error }:Strin    
+g) [], RemoteExc    
+eption
+    + FullyQualified 
+   ErrorId : Native  
+  CommandError
+ 
+[22m[39mgetBranches
+ exception: Error: 
+DB error
+    at 
+Object.<anonymous> (D
+:/ProjectCoding/dataf
+ix-ticketing/src/__te
+sts__/services/master
+DataService.test.ts:5
+7:19)
+    at Object.Mock [
+90m(file:///D:/Projec
+tCoding/datafix-ticke
+ting/[39mnode_module
+s/[4m@vitest[24m/sp
+y/dist/index.js:285:3
+4[90m)[39m
+    at 
+Module.getBranches (D
+:/ProjectCoding/dataf
+ix-ticketing/src/serv
+ices/masterDataServic
+e.ts:7:14)
+    at D:/ProjectCodi
+ng/datafix-ticketing/
+src/__tests__/service
+s/masterDataService.t
+est.ts:60:30
+    at [90mfile:///D
+:/ProjectCoding/dataf
+ix-ticketing/[39mnod
+e_modules/[4m@vitest
+[24m/runner/dist/ind
+ex.js:145:11
+    at [90mfile:///D
+:/ProjectCoding/dataf
+ix-ticketing/[39mnod
+e_modules/[4m@vitest
+[24m/runner/dist/ind
+ex.js:915:26
+    at [90mfile:///D
+:/ProjectCoding/dataf
+ix-ticketing/[39mnod
+e_modules/[4m@vitest
+[24m/runner/dist/ind
+ex.js:1243:20
+    at new Promise 
+(<anonymous>)
+    at 
+runWithTimeout [90m(
+file:///D:/ProjectCod
+ing/datafix-ticketing
+/[39mnode_modules/[
+4m@vitest[24m/runner
+/dist/index.js:1209:1
+0[90m)[39m
+    at [90mfile:///D
+:/ProjectCoding/dataf
+ix-ticketing/[39mnod
+e_modules/[4m@vitest
+[24m/runner/dist/ind
+ex.js:1653:37
+
+ [32mΓ£ô[39m src/__tests__/services/userService.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 28[2mms[22m[39m
+ [32mΓ£ô[39m src/__tests__/services/ticketService.test.ts [2m([22m[2m23 tests[22m[2m)[22m[32m 50[2mms[22m[39m
+ [32mΓ£ô[39m src/__tests__/services/masterDataService.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 83[2mms[22m[39m
+ [32mΓ£ô[39m src/__tests__/components/ProtectedRoute.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[32m 156[2mms[22m[39m
+ [32mΓ£ô[39m src/__tests__/App.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[32m 273[2mms[22m[39m
+ [32mΓ£ô[39m src/__tests__/contexts/AuthContext.test.tsx [2m([22m[2m12 tests[22m[2m)[22m[33m 442[2mms[22m[39m
+ [32mΓ£ô[39m src/__tests__/pages/TicketDetail.test.tsx [2m([22m[2m15 tests[22m[2m)[22m[33m 1044[2mms[22m[39m
+ [32mΓ£ô[39m src/__tests__/pages/CreateTicket.test.tsx [2m([22m[2m12 tests[22m[2m)[22m[33m 1087[2mms[22m[39m
+[90mstderr[2m | src
+/__tests__/pages/Logi
+nPage.test.tsx[2m > 
+[22m[2mLoginPage - 
+form submission[2m 
+> [22m[2m9.5 - 
+submit form gagal 
+ΓåÆ error message 
+ditampilkan
+[22m[39mLogin 
+error details: {
+  "message": 
+"Invalid login 
+credentials"
+}
+
+ [32mΓ£ô[39m src/__tests__/components/SearchableSelect.test.tsx [2m([22m[2m15 tests[22m[2m)[22m[33m 2167[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m 8.14 - options kosong ΓåÆ dropdown tampil pesan kosong saat dibuka [33m 519[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m 8.13 - search tanpa hasil ΓåÆ tampilkan pesan "Tidak ada hasil..." [33m 365[2mms[22m[39m
+ [32mΓ£ô[39m src/__tests__/constants/assignees.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+ [32mΓ£ô[39m src/__tests__/pages/LoginPage.test.tsx [2m([22m[2m7 tests[22m[2m)[22m[33m 2648[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m 9.4 - submit form berhasil ΓåÆ navigate ke "/" [33m 1222[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m 9.5 - submit form gagal ΓåÆ error message ditampilkan [33m 646[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m 9.6 - loading state ΓåÆ tombol disabled, text berubah "Verifikasi..." [33m 591[2mms[22m[39m
+ [32mΓ£ô[39m src/__tests__/pages/UserManagement.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[33m 496[2mms[22m[39m
+ [31mΓ¥»[39m src/__tests__/pages/TicketList.test.tsx [2m([22m[2m10 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 900[2mms[22m[39m
+     [32mΓ£ô[39m 11.1 - loading state ΓåÆ spinner ditampilkan[32m 81[2mms[22m[39m
+     [32mΓ£ô[39m 11.8 - Stats cards ditampilkan setelah data dimuat[32m 150[2mms[22m[39m
+     [32mΓ£ô[39m 11.2 - Render tabel dengan kolom header[32m 130[2mms[22m[39m
+     [32mΓ£ô[39m 11.3 - Detail button navigates to ticket detail[32m 78[2mms[22m[39m
+     [32mΓ£ô[39m 11.11 - Empty state: "Tidak ada tiket yang ditemukan"[32m 30[2mms[22m[39m
+[31m     [31m├ù[31m 11.4 - Filter berdasarkan status tersedia[39m[32m 104[2mms[22m[39m
+     [32mΓ£ô[39m 11.12 - TEAM_LABELS dalam filter Tim dropdown[32m 113[2mms[22m[39m
+     [32mΓ£ô[39m 11.9 - handleAssigneeChange ΓåÆ memanggil updateTicket[32m 73[2mms[22m[39m
+     [32mΓ£ô[39m 11.13 - getPriorityBadge() renders correct labels[32m 69[2mms[22m[39m
+     [32mΓ£ô[39m 11.14 - getStatusBadge() renders badge for each status[32m 67[2mms[22m[39m
+ [31mΓ¥»[39m src/__tests__/utils/formatters.test.ts [2m([22m[2m29 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[32m 30[2mms[22m[39m
+[31m     [31m├ù[31m 2.1 - harus memformat tanggal dengan format "dd MMM yyyy HH:mm" (locale ID)[39m[32m 15[2mms[22m[39m
+     [32mΓ£ô[39m 2.2 - harus memformat tanggal pendek tanpa waktu[32m 1[2mms[22m[39m
+     [32mΓ£ô[39m 2.3 - harus mengembalikan string relatif[32m 2[2mms[22m[39m
+     [32mΓ£ô[39m 2.4 - "open" harus mengembalikan "Dalam Antrean"[32m 0[2mms[22m[39m
+     [32mΓ£ô[39m 2.5 - "in_progress" harus mengembalikan "In Progress"[32m 0[2mms[22m[39m
+     [32mΓ£ô[39m 2.6 - "done" harus mengembalikan "Selesai"[32m 0[2mms[22m[39m
+     [32mΓ£ô[39m 2.7 - "rejected" harus mengembalikan "Rejected"[32m 0[2mms[22m[39m
+     [32mΓ£ô[39m 2.8 - "pending" harus di-map ke "Dalam Antrean" (sama dgn open)[32m 0[2mms[22m[39m
+     [32mΓ£ô[39m 2.9 - status tidak dikenal harus fallback ke value asli[32m 1[2mms[22m[39m
+     [32mΓ£ô[39m 2.10 - "open" harus mengembalikan "gray"[32m 0[2mms[22m[39m
+     [32mΓ£ô[39m 2.11 - "in_progress" harus mengembalikan "blue"[32m 0[2mms[22m[39m
+     [32mΓ£ô[39m 2.12 - "done" harus mengembalikan "green"[32m 0[2mms[22m[39m
+     [32mΓ£ô[39m 2.13 - "rejected" harus mengembalikan "red"[32m 0[2mms[22m[39m
+     [32mΓ£ô[39m "pending" harus mengembalikan "gray" (sama dgn open)[32m 0[2mms[22m[39m
+     [32mΓ£ô[39m status tidak dikenal harus fallback ke "gray"[32m 0[2mms[22m[39m
+     [32mΓ£ô[39m 2.14 - priority 1 harus "High"[32m 0[2mms[22m[39m
+     [32mΓ£ô[39m 2.15 - priority 2 harus "Medium"[32m 0[2mms[22m[39m
+     [32mΓ£ô[39m 2.16 - priority 3 harus "Low"[32m 0[2mms[22m[39m
+     [32mΓ£ô[39m 2.17 - priority 0 (diluar range) harus "Unknown"[32m 0[2mms[22m[39m
+     [32mΓ£ô[39m priority negatif harus "Unknown"[32m 0[2mms[22m[39m
+     [32mΓ£ô[39m 2.18 - priority 1 harus "red"[32m 0[2mms[22m[39m
+     [32mΓ£ô[39m 2.19 - priority 2 harus "orange"[32m 0[2mms[22m[39m
+     [32mΓ£ô[39m 2.20 - priority 3 harus "green"[32m 0[2mms[22m[39m
+     [32mΓ£ô[39m priority di luar range harus "gray"[32m 0[2mms[22m[39m
+     [32mΓ£ô[39m 2.21 - harus memotong teks lebih panjang dari maxLength dan tambah "..."[32m 0[2mms[22m[39m
+     [32mΓ£ô[39m 2.22 - teks lebih pendek dari maxLength tidak dipotong[32m 0[2mms[22m[39m
+     [32mΓ£ô[39m 2.23 - empty string tetap empty[32m 0[2mms[22m[39m
+     [32mΓ£ô[39m teks sama panjang dengan maxLength tidak dipotong[32m 0[2mms[22m[39m
+     [32mΓ£ô[39m maxLength 0 dengan teks non-empty harus dipotong[32m 0[2mms[22m[39m
+[90mstderr[2m | src
+/__tests__/pages/Dash
+board.test.tsx[2m > 
+[22m[2mDashboard - 
+welcome message[2m 
+> [22m[2m10.2 - 
+render welcome ΓåÆ 
+display_name 
+ditampilkan
+[22m[39mThe tag 
+<stop> is 
+unrecognized in this 
+browser. If you 
+meant to render a 
+React component, 
+start its name with 
+an uppercase letter.
+<linearGradient /> 
+is using incorrect 
+casing. Use 
+PascalCase for React 
+components, or 
+lowercase for HTML 
+elements.
+The tag 
+<linearGradient> is 
+unrecognized in this 
+browser. If you 
+meant to render a 
+React component, 
+start its name with 
+an uppercase letter.
+<linearGradient /> 
+is using incorrect 
+casing. Use 
+PascalCase for React 
+components, or 
+lowercase for HTML 
+elements.
+The tag <defs> is 
+unrecognized in this 
+browser. If you 
+meant to render a 
+React component, 
+start its name with 
+an uppercase letter.
+
+[90mstderr[2m | src
+/__tests__/pages/Dash
+board.test.tsx[2m > 
+[22m[2mDashboard - 
+stats cards[2m > 
+[22m[2m10.3 - 
+Stats cards: Total 
+Submissions, Active 
+Requests, Success 
+Rate
+[22m[39m<linearGrad
+ient /> is using 
+incorrect casing. 
+Use PascalCase for 
+React components, or 
+lowercase for HTML 
+elements.
+<linearGradient /> 
+is using incorrect 
+casing. Use 
+PascalCase for React 
+components, or 
+lowercase for HTML 
+elements.
+
+[90mstderr[2m | src
+/__tests__/pages/Dash
+board.test.tsx[2m > 
+[22m[2mDashboard - 
+stats cards[2m > 
+[22m[2m10.4 - 
+Active Requests = 
+open + in_progress
+[22m[39m<linearGrad
+ient /> is using 
+incorrect casing. 
+Use PascalCase for 
+React components, or 
+lowercase for HTML 
+elements.
+<linearGradient /> 
+is using incorrect 
+casing. Use 
+PascalCase for React 
+components, or 
+lowercase for HTML 
+elements.
+
+[90mstderr[2m | src
+/__tests__/pages/Dash
+board.test.tsx[2m > 
+[22m[2mDashboard - 
+stats cards[2m > 
+[22m[2m10.5 - 
+Success Rate = 
+(resolved / total * 
+100) dengan 1 desimal
+[22m[39m<linearGrad
+ient /> is using 
+incorrect casing. 
+Use PascalCase for 
+React components, or 
+lowercase for HTML 
+elements.
+<linearGradient /> 
+is using incorrect 
+casing. Use 
+PascalCase for React 
+components, or 
+lowercase for HTML 
+elements.
+
+[90mstderr[2m | src
+/__tests__/pages/Dash
+board.test.tsx[2m > 
+[22m[2mDashboard - 
+stats cards[2m > 
+[22m[2m10.6 - 
+Success Rate saat 
+total = 0 ΓåÆ "0.0%"
+[22m[39m<linearGrad
+ient /> is using 
+incorrect casing. 
+Use PascalCase for 
+React components, or 
+lowercase for HTML 
+elements.
+<linearGradient /> 
+is using incorrect 
+casing. Use 
+PascalCase for React 
+components, or 
+lowercase for HTML 
+elements.
+
+[90mstderr[2m | src
+/__tests__/pages/Dash
+board.test.tsx[2m > 
+[22m[2mDashboard - 
+stats cards[2m > 
+[22m[2m10.17 - 
+Stats mapping: 
+pending_tickets ΓåÆ 
+open_tickets (compat)
+[22m[39m<linearGrad
+ient /> is using 
+incorrect casing. 
+Use PascalCase for 
+React components, or 
+lowercase for HTML 
+elements.
+<linearGradient /> 
+is using incorrect 
+casing. Use 
+PascalCase for React 
+components, or 
+lowercase for HTML 
+elements.
+
+[90mstderr[2m | src
+/__tests__/pages/Dash
+board.test.tsx[2m > 
+[22m[2mDashboard - 
+charts 
+(admin-only)[2m > 
+[22m[2m10.7 - 
+Charts tampil untuk 
+admin (isAdmin === 
+true)
+[22m[39m<linearGrad
+ient /> is using 
+incorrect casing. 
+Use PascalCase for 
+React components, or 
+lowercase for HTML 
+elements.
+<linearGradient /> 
+is using incorrect 
+casing. Use 
+PascalCase for React 
+components, or 
+lowercase for HTML 
+elements.
+
+[90mstderr[2m | src
+/__tests__/pages/Dash
+board.test.tsx[2m > 
+[22m[2mDashboard - 
+navigation 
+buttons[2m > 
+[22m[2m10.10 - 
+klik "New Ticket" 
+ΓåÆ navigate ke 
+/tickets/new
+[22m[39m<linearGrad
+ient /> is using 
+incorrect casing. 
+Use PascalCase for 
+React components, or 
+lowercase for HTML 
+elements.
+<linearGradient /> 
+is using incorrect 
+casing. Use 
+PascalCase for React 
+components, or 
+lowercase for HTML 
+elements.
+
+[90mstderr[2m | src
+/__tests__/pages/Dash
+board.test.tsx[2m > 
+[22m[2mDashboard - 
+navigation 
+buttons[2m > 
+[22m[2m10.11 - 
+klik "View All" ΓåÆ 
+navigate ke /tickets
+[22m[39m<linearGrad
+ient /> is using 
+incorrect casing. 
+Use PascalCase for 
+React components, or 
+lowercase for HTML 
+elements.
+<linearGradient /> 
+is using incorrect 
+casing. Use 
+PascalCase for React 
+components, or 
+lowercase for HTML 
+elements.
+
+[90mstderr[2m | src
+/__tests__/pages/Dash
+board.test.tsx[2m > 
+[22m[2mDashboard - 
+recent 
+activities[2m > 
+[22m[2m10.9 - 
+recent activities 
+table ΓåÆ shows 
+ticket data
+[22m[39m<linearGrad
+ient /> is using 
+incorrect casing. 
+Use PascalCase for 
+React components, or 
+lowercase for HTML 
+elements.
+<linearGradient /> 
+is using incorrect 
+casing. Use 
+PascalCase for React 
+components, or 
+lowercase for HTML 
+elements.
+
+[90mstderr[2m | src
+/__tests__/pages/Dash
+board.test.tsx[2m > 
+[22m[2mDashboard - 
+recent 
+activities[2m > 
+[22m[2m10.12 - 
+empty state ΓåÆ "No 
+tickets found"
+[22m[39m<linearGrad
+ient /> is using 
+incorrect casing. 
+Use PascalCase for 
+React components, or 
+lowercase for HTML 
+elements.
+<linearGradient /> 
+is using incorrect 
+casing. Use 
+PascalCase for React 
+components, or 
+lowercase for HTML 
+elements.
+
+ [32mΓ£ô[39m src/__tests__/pages/Dashboard.test.tsx [2m([22m[2m16 tests[22m[2m)[22m[33m 1307[2mms[22m[39m
+     [33m[2mΓ£ô[22m[39m 10.10 - klik "New Ticket" ΓåÆ navigate ke /tickets/new [33m 368[2mms[22m[39m
+
+[31mΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»Γ
+Ä»ΓÄ»[39m[1m[41m 
+Failed Tests 2 [49m
+[22m[31mΓÄ»ΓÄ»ΓÄ»ΓÄ»
+ΓÄ»ΓÄ»ΓÄ»[39m
+
+[41m[1m FAIL 
+[22m[49m src/__test
+s__/pages/TicketList.
+test.tsx[2m > 
+[22mTicketList - 
+filters[2m > 
+[22m11.4 - Filter 
+berdasarkan status 
+tersedia
+[31m[1mTestingLibra
+ryElementError[22m[
+39m: Unable to find 
+an element with the 
+display value: Semua 
+Status.
+
+Ignored nodes: 
+comments, script, 
+style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mdata-testi
+d[39m=[32m"layout"
+[39m
+    [36m>[39m
+      [36m<main[39m
+        [33mclass[3
+9m=[32m"flex flex-1 
+justify-center py-6 
+md:py-10 px-4 
+md:px-6"[39m
+      [36m>[39m
+        
+[36m<div[39m
+          [33mclass
+[39m=[32m"layout-con
+tent-container flex 
+flex-col 
+max-w-[1200px] 
+flex-1 gap-4 
+md:gap-6"[39m
+        [36m>[39m
+          
+[36m<div[39m
+            [33mclas
+s[39m=[32m"flex 
+flex-wrap 
+justify-between 
+items-end gap-3"[39m
+          [36m>[39m
+            
+[36m<div[39m
+              [33mcl
+ass[39m=[32m"flex 
+flex-col gap-1 
+md:gap-2"[39m
+            
+[36m>[39m
+              
+[36m<h1[39m
+                [33m
+class[39m=[32m"text
+-[#111418] text-2xl 
+md:text-4xl 
+font-black 
+leading-tight trackin
+g-[-0.033em]"[39m
+              
+[36m>[39m
+                
+[0mProgress Tiket 
+Perbaikan[0m
+              
+[36m</h1>[39m
+              
+[36m<p[39m
+                [33m
+class[39m=[32m"text
+-[#60758a] text-sm 
+md:text-base 
+font-normal 
+leading-normal"[39m
+              
+[36m>[39m
+                
+[0mPantau status 
+pengajuan koreksi 
+data Anda secara 
+real-time.[0m
+              
+[36m</p>[39m
+            
+[36m</div>[39m
+          
+[36m</div>[39m
+          
+[36m<div[39m
+            [33mclas
+s[39m=[32m"grid 
+grid-cols-2 
+md:grid-cols-5 gap-3 
+md:gap-4 mt-1 
+md:mt-2"[39m
+          [36m>[39m
+            
+[36m<div[39m
+              [33mcl
+ass[39m=[32m"col-sp
+an-2 md:col-span-1 
+p-3 md:p-4 bg-white 
+rounded-xl shadow-sm 
+border border-[#e5e7e
+b]"[39m
+            
+[36m>[39m
+              
+[36m<p[39m
+                [33m
+class[39m=[32m"text
+-xs font-bold 
+text-[#60758a] 
+uppercase 
+tracking-wider 
+mb-1"[39m
+              
+[36m>[39m
+                
+[0mTotal Tiket[0m
+              
+[36m</p>[39m
+              
+[36m<p[39m
+                [33m
+class[39m=[32m"text
+-xl md:text-2xl 
+font-black 
+text-[#111418]"[39m
+              
+[36m>[39m
+                
+[0m50[0m
+              
+[36m</p>[39m
+            
+[36m</div>[39m
+            
+[36m<div[39m
+              [33mcl
+ass[39m=[32m"p-3 
+md:p-4 bg-white 
+rounded-xl shadow-sm 
+border border-[#e5e7e
+b]"[39m
+            
+[36m>[39m
+              
+[36m<p[39m
+                [33m
+class[39m=[32m"text
+-xs font-bold 
+text-[#60758a] 
+uppercase 
+tracking-wider 
+mb-1"[39m
+              
+[36m>[39m
+                
+[0mDalam Antrean[0m
+              
+[36m</p>[39m
+              
+[36m<p[39m
+                [33m
+class[39m=[32m"text
+-xl md:text-2xl 
+font-black 
+text-[#111418]"[39m
+              
+[36m>[39m
+                
+[0m10[0m
+              
+[36m</p>[39m
+            
+[36m</div>[39m
+            
+[36m<div[39m
+              [33mcl
+ass[39m=[32m"p-3 
+md:p-4 bg-white 
+rounded-xl shadow-sm 
+border border-[#e5e7e
+b]"[39m
+            
+[36m>[39m
+              
+[36m<p[39m
+                [33m
+class[39m=[32m"text
+-xs font-bold 
+text-[#60758a] 
+uppercase 
+tracking-wider 
+mb-1"[39m
+              
+[36m>[39m
+                
+[0mDiproses[0m
+              
+[36m</p>[39m
+              
+[36m<p[39m
+                [33m
+class[39m=[32m"text
+-xl md:text-2xl 
+font-black 
+text-primary"[39m
+              
+[36m>[39m
+                
+[0m15[0m
+              
+[36m</p>[39m
+            
+[36m</div>[39m
+            
+[36m<div[39m
+              [33mcl
+ass[39m=[32m"p-3 
+md:p-4 bg-white 
+rounded-xl shadow-sm 
+border border-[#e5e7e
+b]"[39m
+            
+[36m>[39m
+              
+[36m<p[39m
+                [33m
+class[39m=[32m"text
+-xs font-bold 
+text-[#60758a] 
+uppercase 
+tracking-wider 
+mb-1"[39m
+              
+[36m>[39m
+                
+[0mSelesai[0m
+              
+[36m</p>[39m
+              
+[36m<p[39m
+                [33m
+class[39m=[32m"text
+-xl md:text-2xl 
+font-black 
+text-green-600"[39m
+              
+[36m>[39m
+                
+[0m20[0m
+              
+[36m</p>[39m
+            
+[36m</div>[39m
+            
+[36m<div[39m
+              [33mcl
+ass[39m=[32m"p-3 
+md:p-4 bg-white 
+rounded-xl shadow-sm 
+border border-[#e5e7e
+b]"[39m
+            
+[36m>[39m
+              
+[36m<p[39m
+                [33m
+class[39m=[32m"text
+-xs font-bold 
+text-[#60758a] 
+uppercase 
+tracking-wider 
+mb-1"[39m
+              
+[36m>[39m
+                
+[0mDitolak[0m
+              
+[36m</p>[39m
+              
+[36m<p[39m
+                [33m
+class[39m=[32m"text
+-xl md:text-2xl 
+font-black 
+text-rose-600"[39m
+              
+[36m>[39m
+                
+[0m5[0m
+              
+[36m</p>[39m
+            
+[36m</div>[39m
+          
+[36m</div>[39m
+          
+[36m<div[39m
+            [33mclas
+s[39m=[32m"bg-white
+ rounded-xl 
+shadow-sm border 
+border-[#e5e7eb] p-3 
+md:p-4"[39m
+          [36m>[39m
+            
+[36m<div[39m
+              [33mcl
+ass[39m=[32m"flex 
+flex-col md:flex-row 
+gap-3 md:gap-4"[39m
+            
+[36m>[39m
+              
+[36m<div[39m
+                [33m
+class[39m=[32m"flex
+-1"[39m
+              
+[36m>[39m
+                
+[36m<label[39m
+                  [3
+3mclass[39m=[32m"fl
+ex flex-col 
+w-full"[39m
+                
+[36m>[39m
+                  
+[36m<div[39m
+                    
+[33mclass[39m=[32m"
+flex w-full 
+items-stretch 
+rounded-lg h-10 
+md:h-11 border 
+border-[#e5e7eb] 
+overflow-hidden"[39m
+                  
+[36m>[39m
+                    
+[36m<div[39m
+                     
+ [33mclass[39m=[32
+m"text-[#60758a] 
+flex bg-[#f0f2f5] 
+items-center 
+justify-center px-3 
+md:px-4"[39m
+                    
+[36m>[39m
+                     
+ [36m<span[39m
+                     
+   [33mclass[39m=[
+32m"material-symbols-
+outlined 
+text-[20px]"[39m
+                     
+ [36m>[39m
+                     
+   [0msearch[0m
+                     
+ [36m</span>[39m
+                    
+[36m</div>[39m
+                    
+[36m<input[39m
+                     
+ [33mclass[39m=[32
+m"form-input flex 
+w-full border-none 
+bg-white 
+text-[#111418] 
+focus:ring-0 px-3 
+md:px-4 text-sm 
+font-normal"[39m
+                     
+ [33mplaceholder[39
+m=[32m"Cari ID 
+Tiket atau 
+Fitur..."[39m
+                     
+ [33mvalue[39m=[32
+m""[39m
+                    
+[36m/>[39m
+                  
+[36m</div>[39m
+                
+[36m</label>[39m
+              
+[36m</div>[39m
+              
+[36m<div[39m
+                [33m
+class[39m=[32m"flex
+ gap-2"[39m
+              
+[36m>[39m
+                
+[36m<button[39m
+                  [3
+3mclass[39m=[32m"fl
+ex h-10 md:h-11 
+items-center gap-2 
+rounded-lg px-4 
+border 
+transition-all 
+text-sm font-medium 
+bg-[#f0f2f5] 
+text-[#111418] 
+border-transparent ho
+ver:border-primary/30
+"[39m
+                
+[36m>[39m
+                  
+[36m<span[39m
+                    
+[33mclass[39m=[32m"
+material-symbols-outl
+ined text-[18px] 
+md:text-[20px]"[39m
+                  
+[36m>[39m
+                    
+[0mfilter_list[0m
+                  
+[36m</span>[39m
+                  
+[36m<span[39m
+                    
+[33mclass[39m=[32m"
+hidden 
+sm:inline"[39m
+                  
+[36m>[39m
+                    
+[0mFilter[0m
+                  
+[36m</span>[39m
+                
+[36m</button>[39m
+...
+[90m [2mΓ¥»[22m Ob
+ject.getElementError 
+node_modules/@testing
+-library/dom/dist/con
+fig.js:[2m37:19[22m
+[39m
+[90m [2mΓ¥»[22m no
+de_modules/@testing-l
+ibrary/dom/dist/query
+-helpers.js:[2m76:38
+[22m[39m
+[90m [2mΓ¥»[22m no
+de_modules/@testing-l
+ibrary/dom/dist/query
+-helpers.js:[2m52:17
+[22m[39m
+[90m [2mΓ¥»[22m no
+de_modules/@testing-l
+ibrary/dom/dist/query
+-helpers.js:[2m95:19
+[22m[39m
+[36m [2mΓ¥»[22m sr
+c/__tests__/pages/Tic
+ketList.test.tsx:[2m
+209:37[22m[39m
+    [90m207| [39m  
+      })
+    [90m208| [39m
+    [90m209| [39m  
+      
+[35mconst[39m 
+statusSelect 
+[33m=[39m screen[3
+3m.[39m[34mgetByDis
+playValue[39m([32m'
+Semua Status'[39m)
+    [90m   | [39m  
+                     
+             
+[31m^[39m
+    [90m210| [39m  
+      [34mexpect[39
+m(statusSelect)[33m.
+[39m[34mtoBeTruthy
+[39m()
+    [90m211| [39m  
+  })
+
+[31m[2mΓÄ»ΓÄ»ΓÄ»ΓÄ»
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[1/
+2]ΓÄ»[22m[39m
+
+[41m[1m FAIL 
+[22m[49m src/__test
+s__/utils/formatters.
+test.ts[2m > 
+[22mformatDate[2m 
+> [22m2.1 - harus 
+memformat tanggal 
+dengan format "dd 
+MMM yyyy HH:mm" 
+(locale ID)
+[31m[1mAssertionErr
+or[22m: expected 
+'15 Jan 2026' to 
+match /10:30/[39m
+
+[32m- 
+Expected:[39m 
+/10:30/
+
+[31m+ 
+Received:[39m 
+"15 Jan 2026"
+
+[36m [2mΓ¥»[22m sr
+c/__tests__/utils/for
+matters.test.ts:[2m2
+3:24[22m[39m
+    [90m 21| [39m  
+      [34mexpect[39
+m(result)[33m.[39m
+[34mtoMatch[39m([36
+m/15/[39m)
+    [90m 22| [39m  
+      [34mexpect[39
+m(result)[33m.[39m
+[34mtoMatch[39m([36
+m/2026/[39m)
+    [90m 23| [39m  
+      [34mexpect[39
+m(result)[33m.[39m
+[34mtoMatch[39m([36
+m/10:30/[39m)
+    [90m   | [39m  
+                     
+[31m^[39m
+    [90m 24| [39m  
+  })
+    [90m 25| [39m})
+
+[31m[2mΓÄ»ΓÄ»ΓÄ»ΓÄ»
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»
+ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»ΓÄ»[2/
+2]ΓÄ»[22m[39m
+
+
+[2m Test Files [22m [1m[31m2 failed[39m[22m[2m | [22m[1m[32m14 passed[39m[22m[90m (16)[39m
+[2m      Tests [22m [1m[31m2 failed[39m[22m[2m | [22m[1m[32m188 passed[39m[22m[90m (190)[39m
+[2m   Start at [22m 09:49:49
+[2m   Duration [22m 15.18s[2m (transform 10.34s, setup 10.82s, import 37.10s, tests 10.74s, environment 76.37s)[22m
+

@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, waitFor } from '@testing-library/react'
-import React from 'react'
+import { render, screen } from '@testing-library/react'
 
 // =============================================
 // Mock dependencies
@@ -45,6 +44,7 @@ vi.mock('../pages/UserManagement', () => ({
 
 vi.mock('../components/ProtectedRoute', () => ({
     default: ({ children }: any) => {
+        // @ts-ignore - require used in vi.mock factory
         const { useAuth } = require('../contexts/AuthContext')
         const { user, loading } = useAuth()
         if (loading) return <div>Loading...</div>

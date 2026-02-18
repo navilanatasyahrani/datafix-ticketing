@@ -89,7 +89,7 @@ describe('createUser', () => {
     it('5.3 - memanggil supabase.rpc("create_new_user") dengan parameter benar', async () => {
         mockRpc.mockResolvedValue({ data: 'user-id', error: null })
 
-        const result = await createUser({
+        await createUser({
             email: 'test@test.com',
             password: 'password123',
             full_name: 'Test User',

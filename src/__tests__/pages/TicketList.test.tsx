@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, waitFor, fireEvent } from '@testing-library/react'
-import React from 'react'
 
 // =============================================
 // Mock dependencies
@@ -205,6 +204,10 @@ describe('TicketList - filters', () => {
         await waitFor(() => {
             expect(screen.getByText('Progress Tiket Perbaikan')).toBeTruthy()
         })
+
+        // Click Filter button to expand the filter panel
+        const filterButton = screen.getByText('Filter')
+        fireEvent.click(filterButton)
 
         const statusSelect = screen.getByDisplayValue('Semua Status')
         expect(statusSelect).toBeTruthy()

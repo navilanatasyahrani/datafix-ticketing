@@ -76,7 +76,7 @@ describe('getTickets', () => {
         const chain = chainable({ data: mockData, error: null })
         mockFrom.mockReturnValue(chain)
 
-        const result = await getTickets({ status: TicketStatus.OPEN })
+        await getTickets({ status: TicketStatus.OPEN })
         expect(mockFrom).toHaveBeenCalledWith('datafix_tickets')
         expect(chain.eq).toHaveBeenCalled()
     })
@@ -262,7 +262,7 @@ describe('getTicketStats', () => {
         const statsData = [{ total_tickets: 10, open_tickets: 5 }]
         mockRpc.mockResolvedValue({ data: statsData, error: null })
 
-        const result = await getTicketStats()
+        await getTicketStats()
         expect(mockRpc).toHaveBeenCalledWith('get_ticket_stats')
     })
 
@@ -292,7 +292,7 @@ describe('addDetailLines', () => {
         const chain = chainable({ data: lines, error: null })
         mockFrom.mockReturnValue(chain)
 
-        const result = await addDetailLines('ticket-123', lines)
+        await addDetailLines('ticket-123', lines)
         expect(mockFrom).toHaveBeenCalledWith('ticket_detail_lines')
 
         // Verify ticket_id was added to each line

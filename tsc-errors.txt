@@ -1,0 +1,17 @@
+﻿src/__tests__/App.test.tsx(2,26): error TS6133: 'waitFor' is declared but its value is never read.
+src/__tests__/App.test.tsx(3,1): error TS6133: 'React' is declared but its value is never read.
+src/__tests__/App.test.tsx(48,29): error TS2591: Cannot find name 'require'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node` and then add 'node' to the types field in your tsconfig.
+src/__tests__/components/ProtectedRoute.test.tsx(4,1): error TS6133: 'React' is declared but its value is never read.
+src/__tests__/components/SearchableSelect.test.tsx(4,1): error TS6133: 'React' is declared but its value is never read.
+src/__tests__/contexts/AuthContext.test.tsx(3,1): error TS6133: 'React' is declared but its value is never read.
+src/__tests__/pages/CreateTicket.test.tsx(1,48): error TS6133: 'afterEach' is declared but its value is never read.
+src/__tests__/pages/CreateTicket.test.tsx(3,1): error TS6133: 'React' is declared but its value is never read.
+src/__tests__/pages/Dashboard.test.tsx(4,1): error TS6133: 'React' is declared but its value is never read.
+src/__tests__/pages/LoginPage.test.tsx(4,1): error TS6133: 'React' is declared but its value is never read.
+src/__tests__/pages/TicketDetail.test.tsx(3,1): error TS6133: 'React' is declared but its value is never read.
+src/__tests__/pages/TicketList.test.tsx(3,1): error TS6133: 'React' is declared but its value is never read.
+src/__tests__/pages/UserManagement.test.tsx(4,1): error TS6133: 'React' is declared but its value is never read.
+src/__tests__/services/ticketService.test.ts(79,15): error TS6133: 'result' is declared but its value is never read.
+src/__tests__/services/ticketService.test.ts(265,15): error TS6133: 'result' is declared but its value is never read.
+src/__tests__/services/ticketService.test.ts(295,15): error TS6133: 'result' is declared but its value is never read.
+src/__tests__/services/userService.test.ts(92,15): error TS6133: 'result' is declared but its value is never read.
