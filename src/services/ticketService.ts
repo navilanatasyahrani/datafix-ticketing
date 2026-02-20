@@ -130,6 +130,7 @@ export const getTicketById = async (id: string) => {
 
 export const createTicket = async (ticketData: Partial<Ticket>) => {
     try {
+        // Step 1: INSERT the ticket and get the ID
         const { data, error } = await supabase
             .from('datafix_tickets')
             .insert([ticketData])
@@ -137,18 +138,26 @@ export const createTicket = async (ticketData: Partial<Ticket>) => {
             .single();
 
         if (error) return { data: null, error };
+        if (!data?.id) return { data: null, error: new Error('No ticket ID returned') };
 
-        // Try to fetch the full ticket (may fail if SELECT RLS blocks)
-        if (data?.id) {
+        // Step 2: Try to fetch full ticket data (best-effort, may fail due to RLS)
+        try {
             const { data: fullTicket } = await supabase
                 .from('datafix_tickets')
-                .select('*, reporter:profiles!datafix_tickets_reporter_user_id_fkey(full_name, email), branch:m_branches!datafix_tickets_branch_id_fkey(name), feature:m_features!datafix_tickets_feature_id_fkey(name)')
+                .select('*, reporter:profiles!reporter_user_id(full_name, email), branch:m_branches(name), feature:m_features(name)')
                 .eq('id', data.id)
                 .single();
-            return { data: fullTicket as Ticket | null, error: null };
+
+            if (fullTicket) {
+                return { data: fullTicket as Ticket, error: null };
+            }
+        } catch (fetchErr) {
+            console.warn('Could not fetch full ticket after create, using minimal data:', fetchErr);
         }
 
-        return { data: null, error: null };
+        // Step 3: Fallback — return minimal ticket with just the ID
+        // This ensures downstream code (detail lines, attachments) can still use ticket.id
+        return { data: { id: data.id } as Ticket, error: null };
     } catch (error) {
         return { data: null, error };
     }
@@ -166,7 +175,7 @@ export const updateTicket = async (id: string, updates: Partial<Ticket>) => {
         // Fetch the ticket separately (may return null if RLS blocks after redirect)
         const { data } = await supabase
             .from('datafix_tickets')
-            .select('*, reporter:profiles!datafix_tickets_reporter_user_id_fkey(full_name, email), branch:m_branches!datafix_tickets_branch_id_fkey(name), feature:m_features!datafix_tickets_feature_id_fkey(name)')
+            .select('*, reporter:profiles!reporter_user_id(full_name, email), branch:m_branches(name), feature:m_features(name)')
             .eq('id', id)
             .single();
 
@@ -245,17 +254,24 @@ export const uploadAttachment = async (ticketId: string, file: File) => {
     try {
         const fileExt = file.name.split('.').pop();
         const fileName = `${ticketId}/${Date.now()}.${fileExt}`;
+        console.log('[uploadAttachment] Step 1: Uploading to storage...', { ticketId, fileName, fileSize: file.size });
 
         const { error: uploadError } = await supabase.storage
             .from('ticket-attachments')
             .upload(fileName, file);
 
-        if (uploadError) throw uploadError;
+        if (uploadError) {
+            console.error('[uploadAttachment] Step 1 FAILED - Storage upload error:', uploadError);
+            throw uploadError;
+        }
+        console.log('[uploadAttachment] Step 1 OK - File uploaded to storage');
 
         const { data: { publicUrl } } = supabase.storage
             .from('ticket-attachments')
             .getPublicUrl(fileName);
+        console.log('[uploadAttachment] Step 2 - Public URL:', publicUrl);
 
+        console.log('[uploadAttachment] Step 3: Inserting into ticket_attachments table...');
         const { data, error } = await supabase
             .from('ticket_attachments')
             .insert([{
@@ -267,8 +283,15 @@ export const uploadAttachment = async (ticketId: string, file: File) => {
             .select()
             .single();
 
+        if (error) {
+            console.error('[uploadAttachment] Step 3 FAILED - DB insert error:', error);
+        } else {
+            console.log('[uploadAttachment] Step 3 OK - Record saved:', data);
+        }
+
         return { data, error };
     } catch (error) {
+        console.error('[uploadAttachment] CAUGHT ERROR:', error);
         return { data: null, error };
     }
 };

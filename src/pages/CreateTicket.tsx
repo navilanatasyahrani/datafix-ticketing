@@ -191,6 +191,7 @@ const CreateTicket: React.FC = () => {
             };
 
             const { data: ticket, error: ticketError } = await createTicket(ticketPayload);
+            console.log('[CreateTicket] createTicket result:', { ticket, ticketError, hasId: ticket?.id });
 
             if (ticketError) throw ticketError;
 
@@ -202,7 +203,13 @@ const CreateTicket: React.FC = () => {
 
             if (screenshots.length > 0 && ticket) {
                 for (const file of screenshots) {
-                    await uploadAttachment(ticket.id, file);
+                    const { data: attData, error: attError } = await uploadAttachment(ticket.id, file);
+                    if (attError) {
+                        console.error('❌ UPLOAD ATTACHMENT ERROR:', attError);
+                        console.error('Ticket ID:', ticket.id, 'File:', file.name);
+                    } else {
+                        console.log('✅ Attachment saved:', attData);
+                    }
                 }
             }
 

@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
 import { getTickets, getTicketStats, updateTicket } from "../services/ticketService";
-import { getRegions } from "../services/masterDataService";
+import { getBranches, getRegions } from "../services/masterDataService";
 import { ASSIGNEES } from "../constants/assignees";
 import { useAuth } from "../contexts/AuthContext";
-import { Ticket, TicketStatus, Region, UserRole } from "../types";
+import { Ticket, TicketStatus, Region, Branch, UserRole } from "../types";
 import { format } from "date-fns";
 import * as XLSX from "xlsx";
 
@@ -31,9 +31,11 @@ const TicketList: React.FC = () => {
   // Role-based filter visibility
   const showRegionFilter = isAdmin || userRole === UserRole.ACCOUNTING_HO || userRole === UserRole.IT_SABANG;
   const showTeamFilter = isAdmin || userRole === UserRole.FIN_ADMIN || userRole === UserRole.ACCOUNTING_HO;
+  const showBranchFilter = userRole === UserRole.OUTLET;
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [filteredTickets, setFilteredTickets] = useState<Ticket[]>([]);
   const [regions, setRegions] = useState<Region[]>([]);
+  const [branches, setBranches] = useState<Branch[]>([]);
   const [stats, setStats] = useState<Stats | null>(null);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
@@ -41,6 +43,7 @@ const TicketList: React.FC = () => {
   const [priorityFilter, setPriorityFilter] = useState("");
   const [regionFilter, setRegionFilter] = useState("");
   const [teamFilter, setTeamFilter] = useState("");
+  const [branchFilter, setBranchFilter] = useState("");
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
   const [showFilters, setShowFilters] = useState(false);
@@ -52,6 +55,7 @@ const TicketList: React.FC = () => {
     statusFilter, priorityFilter, dateFrom, dateTo,
     ...(showRegionFilter ? [regionFilter] : []),
     ...(showTeamFilter ? [teamFilter] : []),
+    ...(showBranchFilter ? [branchFilter] : []),
   ].filter(Boolean).length;
 
   // Calculate pagination
@@ -66,7 +70,7 @@ const TicketList: React.FC = () => {
 
   useEffect(() => {
     applyFilters();
-  }, [searchQuery, statusFilter, priorityFilter, regionFilter, teamFilter, dateFrom, dateTo, tickets]);
+  }, [searchQuery, statusFilter, priorityFilter, regionFilter, teamFilter, branchFilter, dateFrom, dateTo, tickets]);
 
   const loadData = async () => {
     setLoading(true);
@@ -74,6 +78,7 @@ const TicketList: React.FC = () => {
     const { data: ticketsData } = await getTickets();
     const { data: statsData } = await getTicketStats();
     const { data: regionsData } = await getRegions();
+    const { data: branchesData } = await getBranches();
 
     if (ticketsData) {
       // Filter tickets based on user role
@@ -87,6 +92,10 @@ const TicketList: React.FC = () => {
       // FIN_ADMIN, admin, and OUTLET see all (OUTLET is filtered by RLS)
       setTickets(roleFilteredTickets);
       setFilteredTickets(roleFilteredTickets);
+    }
+
+    if (branchesData) {
+      setBranches(branchesData);
     }
 
     if (regionsData) {
@@ -170,6 +179,11 @@ const TicketList: React.FC = () => {
     // Team filter
     if (teamFilter) {
       filtered = filtered.filter((t) => t.target_team === teamFilter);
+    }
+
+    // Branch filter
+    if (branchFilter) {
+      filtered = filtered.filter((t) => t.branch_id === branchFilter);
     }
 
     // Date range filter (based on created_at)
@@ -441,6 +455,26 @@ const TicketList: React.FC = () => {
                     </div>
                   )}
 
+                  {/* Cabang — only for Outlet */}
+                  {showBranchFilter && (
+                    <div>
+                      <label className="text-[10px] font-bold text-[#60758a] uppercase tracking-wider mb-1.5 block">Cabang</label>
+                      <div className="relative">
+                        <select
+                          className="flex w-full h-10 md:h-11 items-center rounded-lg bg-[#f0f2f5] px-3 md:px-4 border border-transparent hover:border-primary/30 focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all appearance-none pr-9 text-[#111418] text-xs md:text-sm font-medium"
+                          value={branchFilter}
+                          onChange={(e) => setBranchFilter(e.target.value)}
+                        >
+                          <option value="">Semua Cabang</option>
+                          {branches.map(b => (
+                            <option key={b.id} value={b.id}>{b.name}</option>
+                          ))}
+                        </select>
+                        <span className="material-symbols-outlined text-[18px] absolute right-2 md:right-3 top-1/2 -translate-y-1/2 pointer-events-none text-[#60758a]">keyboard_arrow_down</span>
+                      </div>
+                    </div>
+                  )}
+
                   {/* Dari Tanggal */}
                   <div>
                     <label className="text-[10px] font-bold text-[#60758a] uppercase tracking-wider mb-1.5 block">Dari Tanggal</label>
@@ -473,6 +507,7 @@ const TicketList: React.FC = () => {
                         setPriorityFilter('');
                         setRegionFilter('');
                         setTeamFilter('');
+                        setBranchFilter('');
                         setDateFrom('');
                         setDateTo('');
                       }}
@@ -519,6 +554,12 @@ const TicketList: React.FC = () => {
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
+                    <span className="text-xs text-[#60758a] font-medium">Cabang</span>
+                    <span className="text-sm text-[#111418] text-right max-w-[60%] truncate">
+                      {ticket.branch?.name || '-'}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between">
                     <span className="text-xs text-[#60758a] font-medium">Region</span>
                     <span className="text-sm text-[#111418]">
                       {ticket.origin_region?.region_name || '-'}
@@ -562,6 +603,9 @@ const TicketList: React.FC = () => {
                       Fitur
                     </th>
                     <th className="px-6 py-4 text-xs font-bold text-[#60758a] uppercase tracking-wider">
+                      Cabang
+                    </th>
+                    <th className="px-6 py-4 text-xs font-bold text-[#60758a] uppercase tracking-wider">
                       Region
                     </th>
                     {showTeamColumn && (
@@ -603,6 +647,9 @@ const TicketList: React.FC = () => {
                           : ticket.feature?.name) ||
                           ticket.feature_other ||
                           ticket.issue_type}
+                      </td>
+                      <td className="px-6 py-4 text-sm text-[#111418]">
+                        {ticket.branch?.name || '-'}
                       </td>
                       <td className="px-6 py-4 text-sm text-[#111418]">
                         {ticket.origin_region?.region_name || '-'}
@@ -684,7 +731,7 @@ const TicketList: React.FC = () => {
                   {filteredTickets.length === 0 && (
                     <tr>
                       <td
-                        colSpan={showAssignedColumn ? 9 : showTeamColumn ? 8 : 7}
+                        colSpan={showAssignedColumn ? 10 : showTeamColumn ? 9 : 8}
                         className="px-6 py-12 text-center text-[#60758a]"
                       >
                         Tidak ada tiket yang ditemukan
