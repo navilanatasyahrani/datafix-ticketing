@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { ROLE_LABELS } from '../types';
 
 interface LayoutProps {
     children: React.ReactNode;
@@ -109,7 +110,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                                         {profile?.full_name || 'Admin User'}
                                     </p>
                                     <p className="text-[10px] text-slate-500 leading-tight">
-                                        {profile?.role === 'admin' ? 'Super Admin' : 'User'}
+                                        {profile?.role ? (ROLE_LABELS[profile.role] || profile.role) : 'User'}
                                     </p>
                                 </div>
                                 <div className="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border-2 border-primary/20 flex items-center justify-center bg-gradient-to-br from-blue-400 to-indigo-500 text-white font-bold">
@@ -130,7 +131,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                                                 {profile?.full_name || 'Admin User'}
                                             </p>
                                             <p className="text-[10px] text-slate-500">
-                                                {profile?.role === 'admin' ? 'Super Admin' : 'User'}
+                                                {profile?.role ? (ROLE_LABELS[profile.role] || profile.role) : 'User'}
                                             </p>
                                         </div>
 
@@ -181,6 +182,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 </NavLink>
                 <NavLink
                     to="/tickets"
+                    end
                     className={({ isActive }) =>
                         `flex flex-col items-center gap-0.5 p-1.5 transition-all ${isActive ? 'text-primary' : 'text-slate-400'}`
                     }

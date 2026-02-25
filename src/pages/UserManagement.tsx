@@ -87,6 +87,7 @@ const UserManagement: React.FC = () => {
             case UserRole.FIN_ADMIN: return 'bg-emerald-100 text-emerald-700';
             case UserRole.IT_SABANG: return 'bg-amber-100 text-amber-700';
             case UserRole.OUTLET: return 'bg-sky-100 text-sky-700';
+            case UserRole.FINANCE_HO: return 'bg-teal-100 text-teal-700';
             default: return 'bg-gray-100 text-gray-700';
         }
     };

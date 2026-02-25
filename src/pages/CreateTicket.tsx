@@ -167,7 +167,11 @@ const CreateTicket: React.FC = () => {
             // Determine queue routing based on role
             let targetTeam = 'FIN_REGION';
             let currentQueue = 'FIN_ADMIN';
-            if (userRole === UserRole.ACCOUNTING_HO) {
+            if (userRole === UserRole.FINANCE_HO) {
+                // FINANCE_HO: langsung ke Accounting HO, bypass Finance Region
+                targetTeam = 'ACC_HO';
+                currentQueue = 'ACCOUNTING_HO';
+            } else if (userRole === UserRole.ACCOUNTING_HO) {
                 targetTeam = formData.target_team || 'ACC_HO';
                 // Map target_team to current_queue
                 const queueMap: Record<string, string> = { ACC_HO: 'ACCOUNTING_HO', IT_SABANG: 'IT_SABANG' };

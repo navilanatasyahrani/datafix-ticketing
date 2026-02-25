@@ -101,6 +101,7 @@ export enum UserRole {
   OUTLET = "OUTLET",
   FIN_ADMIN = "FIN_ADMIN",
   IT_SABANG = "IT_SABANG",
+  FINANCE_HO = "FINANCE_HO",
 }
 
 // ========================================
@@ -149,4 +150,5 @@ export const ROLE_LABELS: Record<string, string> = {
   [UserRole.OUTLET]: "Outlet",
   [UserRole.FIN_ADMIN]: "Finance Admin",
   [UserRole.IT_SABANG]: "IT Sabang",
+  [UserRole.FINANCE_HO]: "Finance HO",
 };
